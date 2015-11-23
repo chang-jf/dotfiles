@@ -1,0 +1,49 @@
+# -------------------------------------------------------------------
+# .bash_aliases.Darwin
+# - OS spectificed aliases for Mac OS X
+# -------------------------------------------------------------------
+alias ls='ls -G -F'
+#Get OSX Software Updates,and update installed Ruby gems, Homebrew, npm, and their installed packages
+alias macupdate='sudo softwareupdate -i -a; brew update; brew upgrade --all; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
+alias lanip='ipconfig getifaddr en0'
+#View HTTP traffic
+alias sniff='sudo ngrep -d '\''en1'\'' -t '\''^(GET|POST) '\'' '\''tcp and port 80'\'''
+alias httpdump='sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E "Host\: .*|GET \/.*"'
+# OS X has no `md5sum`, so use `md5` as a fallback
+command -v md5sum > /dev/null || alias md5sum="md5"
+# OS X has no `sha1sum`, so use `shasum` as a fallback
+command -v sha1sum > /dev/null || alias sha1sum="shasum"
+# Empty the Trash on all mounted volumes and the main HDD.
+# Also, clear Apple’s System Logs to improve shell startup speed.
+# Finally, clear download history from quarantine. https://mths.be/bum
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
+# Merge PDF files
+# # Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
+alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'}
+# Lock the screen (when going AFK)
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="exec $SHELL -l"
+#free command for OSX
+alias free='top -l 1 -s 0 | grep PhysMem'
+
+# -------------------------------------------------------------------
+# Various OS X defaults
+# https://github.com/mathiasbynens/dotfiles/blob/master/.osx
+# -------------------------------------------------------------------
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+# Show/hide hidden files in Finder
+defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder
+#alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+# Automatically hide and show the Dock
+# defaults write com.apple.dock autohide -bool true
+# # Save screenshots to the desktop
+defaults write com.apple.screencapture location -string “$HOME/Desktop”
+# # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
+defaults write com.apple.screencapture type -string “png”
+# # Display full POSIX path as Finder window title
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+# # Disable the sound effects on boot
+# sudo nvram SystemAudioVolume=” “

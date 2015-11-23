@@ -1,0 +1,57 @@
+# -------------------------------------------------------------------
+# .bash_aliases
+# - To change the default options of a command
+# - To do simple text replacement on the command name
+# - Will modify shell environment
+# - Only used in an interactive shell, by human, not by other program
+# - High-Frequency use
+# -------------------------------------------------------------------
+
+# - To change the default options of a command
+# -------------------------------------------------------------------
+alias 'rm=rm -i'
+alias 'vi=vim'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# - To do simple text replacement on the command name
+# -------------------------------------------------------------------
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ~="cd ~"                                                      # `cd` is probably faster to type though
+alias -- -="cd -"
+alias listen="lsof -P -i -n"                                        # Show which applications are connecting to the network.
+alias port='netstat -tulanp'                                        # Show the active ports
+alias 'dus=du -sckx * | sort -nr'                                   # du be sorted by size
+alias myip="dig +short myip.opendns.com @resolver1.opendns.com"     # IP addresses
+
+# - Will modify shell environment
+# -------------------------------------------------------------------
+
+# - Only used in an interactive shell, by human, not by other program
+# -------------------------------------------------------------------
+
+# - High-Frequency use
+# -------------------------------------------------------------------
+alias histg="history | grep"                                        # quickly search through your command history: histg [keyword]]
+
+# -------------------------------------------------------------------
+
+# OS specificed aliases
+case `uname -s` in
+  Darwin)
+    source ~/.dotfiles/bash/bash_aliases.Darwin
+    ;;
+  *) 
+    source ~/.dotfiles/bash/bash_aliases.Linux
+    ;;
+esac
+
+#reference
+#https://github.com/zanshin/dotfiles/blob/master/bash/bash_aliases
+#https://github.com/mathiasbynens/dotfiles/blob/master/.aliases
+#https://github.com/mathiasbynens/dotfiles/blob/master/.aliases
+#http://xmodulo.com/useful-bash-aliases-functions.html

@@ -1,0 +1,48 @@
+# -------------------------------------------------------------------
+# .bash_functions
+#
+# Various functions 
+# -------------------------------------------------------------------
+# System info
+# -------------------------------------------------------------------
+# md5check [file] [key]
+md5check() { md5sum "$1" | grep "$2";}
+# display the number of unread emails in your gmail: gmail [user name]
+# gmail() { curl -u "$1" --silent "https://mail.google.com/mail/feed/atom" | sed -e 's/<\/fullcount.*/\n/' | sed -e 's/.*fullcount>//'}
+
+# -------------------------------------------------------------------
+# Movement
+# -------------------------------------------------------------------
+# Make a directory and cd into it in one command: mcd [name].
+mcd() { mkdir -p "$1"; cd "$1";}
+# cd into a directory and list its content: cls [name].
+lcd() { cd "$1"; ls;}
+
+# -------------------------------------------------------------------
+# Making things
+# -------------------------------------------------------------------
+# backup [file] will create [file].bak in the same directory.
+bak() { cp "$1"{,.bak};}
+# ake a script out of the last command you ran: makescript [script.sh]
+alias makescript="fc -rnl | head -1 >"
+# Extract any kind of archive: extract [archive file]
+extract() { 
+    if [ -f $1 ] ; then 
+      case $1 in 
+        *.tar.bz2)   tar xjf $1     ;; 
+        *.tar.gz)    tar xzf $1     ;; 
+        *.bz2)       bunzip2 $1     ;; 
+        *.rar)       unrar e $1     ;; 
+        *.gz)        gunzip $1      ;; 
+        *.tar)       tar xf $1      ;; 
+        *.tbz2)      tar xjf $1     ;; 
+        *.tgz)       tar xzf $1     ;; 
+        *.zip)       unzip $1       ;; 
+        *.Z)         uncompress $1  ;; 
+        *.7z)        7z x $1        ;; 
+        *)     echo "'$1' cannot be extracted via extract()" ;; 
+         esac 
+     else 
+         echo "'$1' is not a valid file" 
+     fi 
+}
