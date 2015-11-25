@@ -2,6 +2,8 @@
 # .inputrc
 #
 # -------------------------------------------------------------------
+# Set editing mode to vi instead of emac
+set editing-mode vi
 
 # Make Tab autocomplete regardless of filename case
 set completion-ignore-case on

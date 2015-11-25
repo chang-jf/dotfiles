@@ -2,7 +2,7 @@
 # .bash_aliases.Darwin
 # - OS spectificed aliases for Mac OS X
 # -------------------------------------------------------------------
-alias ls='ls -G -F'
+#alias ls='ls -G -F'
 #Get OSX Software Updates,and update installed Ruby gems, Homebrew, npm, and their installed packages
 alias macupdate='sudo softwareupdate -i -a; brew update; brew upgrade --all; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
 alias lanip='ipconfig getifaddr en0'
@@ -35,10 +35,10 @@ alias free='top -l 1 -s 0 | grep PhysMem'
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 # Show/hide hidden files in Finder
-defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder
-#alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
 # Automatically hide and show the Dock
-# defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide -bool true
 # # Save screenshots to the desktop
 defaults write com.apple.screencapture location -string “$HOME/Desktop”
 # # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)

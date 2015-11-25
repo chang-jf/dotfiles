@@ -11,6 +11,12 @@
 # -------------------------------------------------------------------
 alias 'rm=rm -i'
 alias 'vi=vim'
+alias ls='ls -F'                                                    # both BSD/GNU ls support -F option, here we enable it is for BSD ls B'Coz GNU ls got re-alias later.
+# if ls --color running without problem, then we are GNU ls, enable color option via alias ls=ls --color=auto, 
+# otherwise we are BSD ls, set environment virable $CLICOLOR='true' to enable color output
+# ref: http://superuser.com/questions/183876/how-do-i-get-ls-color-auto-to-work-on-mac-os-x/879035#879035
+ls --color=auto &> /dev/null && alias ls='ls -F --color=auto' ||
+#--------------------------------------------------------------------------------------------------------
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'

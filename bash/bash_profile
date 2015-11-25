@@ -9,7 +9,7 @@
 # clean up duplicate PATH entries #FIXME, not work yet
 # -------------------------------------------------------------------
 #export PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++')
-export PATH="$HOME/bin:$PATH";
+export PATH="$HOME/.bin:$PATH";
 
 # -------------------------------------------------------------------
 # No core files by default
@@ -34,17 +34,22 @@ export MANPAGER='less -X'
 export LESS="-M -S -n -q -i"
 export IGNOREEOF=2                                       # prevent accidently logout by Ctrl+d for two times, 3rd time hit ctrl+d will logout tho.
 export TMOUT=0                                           # disable autologout
-export LS_COLORS='no=00:fi=00:di=01;34:ow=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+export CLICOLOR='true'                                   # turn on color output for CLI commands from *BSD/darwin, majorly for BSD command "ls", GNU ls(the ls in Linux) will ignore it.
+export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD                   # solarized color scheme for *BSD/darwin ls, ref: https://github.com/seebi/dircolors-solarized/issues/10
+#export LS_COLORS='no=00:fi=00:di=01;34:ow=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+eval `dircolors ~/.dotfiles/bash/dircolors-solarized/dircolors.256dark`
+                                                         # solarized color scheme for GNU ls, ref: https://github.com/seebi/dircolors-solarized
 export PYTHONIOENCODING='UTF-8';                         # Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
 export LANG='en_US.UTF-8';
 export LC_ALL='en_US.UTF-8';
 unset noclobber                                          # allow redirection to overwrite file
-# configure how history works
+# configure how history works ---------------------------
 export HISTCONTROL=ignoredups                            # ignore the line if it matches previous line
 export HISTFILESIZE=20000                                # size of the history file cf. also shopt -s histappend
 export HISTSIZE=1000                                     # size of the run-time history list
 export HISTIGNORE=ls:ll:la:l:cd:pwd:exit:mc:su:df:clear  # do not put these in history file
 export HISTFILE=~/.bash_history-`hostname`               # track history by host
+#--------------------------------------------------------
 
 # Keyboard, bell, display style: the readline config file:
 if [ -z "$INPUTRC" -a ! -f "$HOME/.inputrc" ]; then
@@ -53,37 +58,49 @@ fi
 
 
 # -------------------------------------------------------------------
-# Setup TERM
+# Setup TERM, prefer order: xterm-256color-> xterm-16-> xterm-> vt100
+# Mostly modern terminal has 256 color supported, so typically only need one line:
+#   export $TERM=xterm-256color
+# quote from Debian's default bashrc for the reason to set TERM to vt100
+# > turned off by default to not distract the user: 
+# > the focus in a terminal window
+# > should be on the output of commands, not on the prompt
+# So it is up to you, I'll pick up xterm-256color unless host that I working on has low resource limit.
+#
+# issue command infocmp to list terminal emulator's capability or compare two of them, eg. "infocmp xterm"
+# majorly my concern is color display in the shell, 
+# set to xterm-256color for 256 colors, xterm-16color for 16 colors, xterm for 8 color and vt100 for mono
 # -------------------------------------------------------------------
-if [ "$TERM" = "xterm" ] && [ "$myos" = "Linux" ]
-then
-  export TERM=vt100
-fi
-
-if [ "$TERM" = "linux" ]
-then
-  export TERM=vt100
-fi
-
-if [ "$TERM" = "vt320" ]
-then
-  export TERM=xterm
-fi
-
-if [ "$TERM" = "screen" ]
-then
-  stty erase '^?'
-fi
-
-if [ "$TERM" = "screen" ] && [ "$myos" = "SunOS" ]
-then
-  TERM=xterm
-fi
-
-if [ "$TERM" = "screen-256color" ] && [ "$myos" = "Linux" ]
-then
-  TERM=xterm-256color
-fi
+export TERM=xterm-256color
+#if [ "$TERM" = "xterm" ] && [ "$myos" = "Linux" ]        # In a terminal emulator under X
+#then
+#  export TERM=vt100
+#fi
+#
+#if [ "$TERM" = "linux" ]                                 # In Linux vConsole
+#then
+#  export TERM=vt100
+#fi
+#
+#if [ "$TERM" = "vt320" ]
+#then
+#  export TERM=xterm
+#fi
+#
+#if [ "$TERM" = "screen" ]                                # In screen/tmux
+#then
+#  stty erase '^?'
+#fi
+#
+#if [ "$TERM" = "screen" ] && [ "$myos" = "SunOS" ]
+#then
+#  TERM=xterm
+#fi
+#
+#if [ "$TERM" = "screen-256color" ] && [ "$myos" = "Linux" ]
+#then
+#  TERM=xterm-256color
+#fi
 
 # -------------------------------------------------------------------
 # Customization prompt
