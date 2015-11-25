@@ -1,0 +1,63 @@
+# ------------------------------------------------------------------
+# .lftprc
+#
+# LFTP rc files, define prompt, ptotocol and so on.
+# ------------------------------------------------------------------
+# Settings
+
+# Display all files (including hidden ones) with `ls`.
+#set ftp:list-options -a
+
+# Enable colors in interactive mode. Used by e.g. directory listings (which
+# use $LS_COLORS).
+set color:use-color auto
+
+# Use a colorized prompt. Hostname in bold green, current directory in bold
+# blue.
+set cmd:prompt "\s \u\@\[\e[01;32m\]\h\[\e[00m\]:\[\e[01;34m\]\w\[\e[00m\] > "
+
+# Store passwords in the bookmarks file.
+set bmk:save-passwords yes
+
+# Don't store current directory of each server in ~/.lftp/cwd_history.
+set cmd:save-cwd-history no
+
+# Don't store transfer logs in ~/.lftp/transfer_log.
+set xfer:log no
+
+# No retries after a failed connection, prevents (long) delays e.g. for
+# automated jobs.
+set net:max-retries 1
+
+# If SSL is used make sure the data connection is encrypted as well. This
+# should be the default behavior!.
+set ftp:ssl-protect-data yes
+set ftp:ssl-protect-fxp yes
+# Same for control connections (default).
+set ftp:ssl-protect-list yes
+# Make sure SSL is not dropped after a successful login (default).
+set ftp:ssl-use-ccc no
+# And verify the certificate and hostname, otherwise encryption doesn't matter
+# (default).
+set ssl:check-hostname yes
+set ssl:verify-certificate yes
+
+# If you don't like advertising lftp or servers hate it, set this:
+set ftp:anon-pass "mozilla@"
+set http:user-agent "Mozilla/4.7 [en] (WinNT; I)"
+
+# ALIASES
+
+# local to remote, erase remote files if it doesn't existed on local, use with careful
+# Create "sync" command which syncs local directories with remote ones and
+# transfers all missing/outdated files. Local files which don't exist anymore
+# are removed on the server.
+alias sync mirror --verbose --reverse --delete --dereference
+
+# Create commands to go up directories.
+alias .. cd ..
+alias ... cd ../..
+alias .... cd ../../..
+# switch ls with cls, make cls the default
+alias ls command cls -hiDFI --sort=name
+alias hostls command ls
