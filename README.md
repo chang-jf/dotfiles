@@ -4,12 +4,11 @@ This repository holds configuration files from my working environment, So I can 
 
     git clone git://github.com/chang-jf/dotfiles.git ~/.dotfiles
     cd ~/.dotfiles
-    git submodule init ~/.dotfiles/bash/dircolors-solarized
-    git submodule update
     ~/.dotfiles/install.sh
 
-#Setup
+# Setup
 I made these automatically through ~/.dotfiles/install.sh, If you want to do it manually, this is how.
+
 ## Initial submodules
 $ git submodule init ~/.dotfiles/bash/dircolors-solarized
 $ git submodule update
@@ -24,13 +23,21 @@ $ ln -sf ~/.dotfiles/bash/bashrc ~/.bashrc
 $ ln -sf ~/.dotfiles/bash/inputrc ~/.inputrc
 $ ln -sf ~/.dotfiles/bash/bin ~/.bin
 
-# lftp rc files
+## lftp rc files
 $ ln -sf ~/.dotfiles/lftp/lftprc ~/.lftprc
 
-# -------------------------------------------------------------------
-# git config files
-# -------------------------------------------------------------------
+## git config files
 ln -sf ~/.dotfiles/git/gitconfig ~/.gitconfig
+
+## tmux (terminal multiplexer) configuration
+For tmux configuration create this symlink:
+
+    $ ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+--------------------------------------------------------------    
+## ssh
+For ssh configuration, create the following symlink:
+
+    ln -s ~/.dotfiles/ssh/config ~/.ssh/config
 
 ## Homebrew
 On those Mac OS machines where I install Homebrew I also edit `/etc/paths` to move the `/usr/local/bin` entry to the top of the list. This ensures that Homebrew-managed programs and libraries occur prior to `/usr/bin` and system-provided programs and libraries. The resulting `/etc/paths` files looks like this:
@@ -43,11 +50,6 @@ On those Mac OS machines where I install Homebrew I also edit `/etc/paths` to mo
 
 The `~/.dotfiles/brew/Brewfile` acts as a bundle for Homebrew. Use `brew bundle ~/.dotfiles/brew/Brewfile` to set up brews.
     
-## ssh
-For ssh configuration, create the following symlink:
-
-    ln -s ~/.dotfiles/ssh/config ~/.ssh/config
-
 ## Vim
 For Vim configuration and use, create the following symlinks:
 

@@ -20,6 +20,7 @@ ls --color=auto &> /dev/null && alias ls='ls -F --color=auto' ||
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+alias tm="tmux a || tmux new"
 
 # - To do simple text replacement on the command name
 # -------------------------------------------------------------------
