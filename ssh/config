@@ -4,6 +4,9 @@ host nvod
 host pc
 	HostName 192.168.99.11
         User land
+host serverpc
+	HostName 192.168.88.10
+        User land
 
  host *
      User land
