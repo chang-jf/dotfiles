@@ -29,16 +29,15 @@ $ ln -sf ~/.dotfiles/lftp/lftprc ~/.lftprc
 ## git config files
 ln -sf ~/.dotfiles/git/gitconfig ~/.gitconfig
 
-## tmux (terminal multiplexer) configuration
-For tmux configuration create this symlink:
-
-    $ ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
---------------------------------------------------------------    
 ## ssh
-For ssh configuration, create the following symlink:
+ln -s ~/.dotfiles/ssh/config ~/.ssh/config
 
-    ln -s ~/.dotfiles/ssh/config ~/.ssh/config
+## tmux (terminal multiplexer) configuration
+ln -sf ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
 
+## wget
+ln -sf ~/.dotfiles/wget/wgetrc ~/.wgetrc
+--------------------------------------------------------------    
 ## Homebrew
 On those Mac OS machines where I install Homebrew I also edit `/etc/paths` to move the `/usr/local/bin` entry to the top of the list. This ensures that Homebrew-managed programs and libraries occur prior to `/usr/bin` and system-provided programs and libraries. The resulting `/etc/paths` files looks like this:
 
@@ -78,41 +77,8 @@ The `YouCompleteMe` bundle requires an additional compile step. Go read teh "Ins
     $ cd ~/.vim/bundle/YouCompleteMe
     $ ./install.sh --clang-completer
 
-
-## Git
-For Git configuration and global ignore files, create these symlinks:
-
-    $ ln -s ~/.dotfiles/git/gitconfig ~/.gitconfig
-    $ ln -s ~/.dotfiles/git/gitignore_global ~/.gitignore_global
-
-For machines where Sublime Text 2 cannot be installed, link
-`git/gitconfig_remote` instead. This will use `vimdiff` as the merge and diff
-tool rather than ST2.
-
-## tmux (terminal multiplexer) configuration
-For tmux configuration create this symlink:
-
-    $ ln -s ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
-
-Setup `tmuxinator` by installing it's gem
-
-    $ gem install tmuxinator
-
-And link in the directory containing the YML files for the `mux` command.
-
-    $ ln -s ~/.dotfiles/tmux/tmuxinator ~/.tmuxinator
-
-## OpenConnect
-An alternative to using Cisco's AnyConnect.
-
-Requires that `openconnect` be installed via Homebrew and that TUN/TAP for OS X be installed. See http://zanshin.net/2013/08/27/setup-openconnect-for-mac-os-x-lion/
-for details.
-
-    $ ln -s ~/.dotfiles/openconnect/openconnect ~/.openconnect
-
-
 # Reference
-[Mathiasbynens's dotfile repository](https://github.com/mathiasbynens/dotfiles)
-[Zanshin's dotfile repository](https://github.com/zanshin/dotfiles)
-[Webpro's dotfile repository](https://github.com/webpro/dotfiles)
-[C9s's make file for installation](http://c9s.blogspot.tw/2009/11/git-dotfiles.html)
+[Mathiasbynens's dotfile repository](https://github.com/mathiasbynens/dotfiles)  
+[Zanshin's dotfile repository](https://github.com/zanshin/dotfiles)  
+[Webpro's dotfile repository](https://github.com/webpro/dotfiles)  
+[C9s's make file for installation](http://c9s.blogspot.tw/2009/11/git-dotfiles.html)  
