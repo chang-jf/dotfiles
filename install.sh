@@ -49,3 +49,8 @@ ln -sf ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
 # wgetrc files
 # -------------------------------------------------------------------
 ln -sf ~/.dotfiles/wget/wgetrc ~/.wgetrc
+
+# -------------------------------------------------------------------
+# curlrc files
+# -------------------------------------------------------------------
+ln -sf ~/.dotfiles/curl/curlrc ~/.curlrc
