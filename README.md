@@ -1,42 +1,64 @@
 This repository holds configuration files from my working environment, So I can keep improve and make migration easier.
 
 #Installation
-
-    git clone git://github.com/chang-jf/dotfiles.git ~/.dotfiles
-    cd ~/.dotfiles
-    ~/.dotfiles/install.sh
+```
+git clone git://github.com/chang-jf/dotfiles.git ~/.dotfiles
+~/.dotfiles/install.sh
+```
 
 # Setup
 I made these automatically through ~/.dotfiles/install.sh, If you want to do it manually, this is how.
 
 ## Initial submodules
-$ git submodule init ~/.dotfiles/bash/dircolors-solarized
-$ git submodule update
-$ ln -sf ~/.dotfiles/bash/dircolors-solarized/dircolors.256dark ~/.dir_colors
+```
+pushd ~/.dotfiles
+git submodule init
+git submodule update  
+popd
+ln -sf ~/.dotfiles/bash/dircolors-solarized/dircolors.256dark ~/.dir_colors  
+```
 
 ## bash
-Separated into few rc files, however, To keep ~/ clean, 
+Separated into few rc files, however, To keep ~/ clean,  
 I only want to link standard rcfile back to home, then sourcing from ~/.bashrc
 
-$ ln -sf ~/.dotfiles/bash/bash_profile ~/.bash_profile
-$ ln -sf ~/.dotfiles/bash/bashrc ~/.bashrc
-$ ln -sf ~/.dotfiles/bash/inputrc ~/.inputrc
-$ ln -sf ~/.dotfiles/bash/bin ~/.bin
+```
+ln -sf ~/.dotfiles/bash/bash_profile ~/.bash_profile
+ln -sf ~/.dotfiles/bash/bashrc ~/.bashrc
+ln -sf ~/.dotfiles/bash/inputrc ~/.inputrc
+ln -sf ~/.dotfiles/bash/bin ~/.bin
+```
 
 ## lftp rc files
-$ ln -sf ~/.dotfiles/lftp/lftprc ~/.lftprc
+```
+ln -sf ~/.dotfiles/lftp/lftprc ~/.lftprc
+```
 
 ## git config files
+```
 ln -sf ~/.dotfiles/git/gitconfig ~/.gitconfig
+```
 
 ## ssh
+```
+[ ! -d ~/.ssh ] && mkdir ~/.ssh
 ln -s ~/.dotfiles/ssh/config ~/.ssh/config
+```
 
 ## tmux (terminal multiplexer) configuration
+```
 ln -sf ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+```
 
 ## wget
+```
 ln -sf ~/.dotfiles/wget/wgetrc ~/.wgetrc
+```
+
+## curl
+ln -sf ~/.dotfiles/curl/curlrc ~/.curlrc
+
+
 --------------------------------------------------------------    
 ## Homebrew
 On those Mac OS machines where I install Homebrew I also edit `/etc/paths` to move the `/usr/local/bin` entry to the top of the list. This ensures that Homebrew-managed programs and libraries occur prior to `/usr/bin` and system-provided programs and libraries. The resulting `/etc/paths` files looks like this:
