@@ -9,6 +9,15 @@
 # clean up duplicate PATH entries #FIXME, not work yet
 # -------------------------------------------------------------------
 #export PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++')
+
+# -------------------------------------------------------------------
+# If homebrew installed, insert /usr/local/bin into front of PATH, which made brew managed app able to be use
+# -------------------------------------------------------------------
+which brew &> /dev/null && export PATH="/usr/local/bin:$PATH"
+
+# -------------------------------------------------------------------
+# Insert ~/.bin into PATH for user script
+# -------------------------------------------------------------------
 export PATH="$HOME/.bin:$PATH";
 
 # -------------------------------------------------------------------
@@ -31,7 +40,7 @@ export HOSTNAME=`/bin/hostname`
 export EDITOR=vim
 export PAGER=less
 export MANPAGER='less -X'
-export LESS="-M -S -n -q -i"
+export LESS="-R -M -S -n -q -i"                          # R:color output, M:prompt verbosely, S:chop long lines, n:disable line number, q:disable bell, i:ignore case
 export IGNOREEOF=2                                       # prevent accidently logout by Ctrl+d for two times, 3rd time hit ctrl+d will logout tho.
 export TMOUT=0                                           # disable autologout
 export CLICOLOR='true'                                   # turn on color output for CLI commands from *BSD/darwin, majorly for BSD command "ls", GNU ls(the ls in Linux) will ignore it.
