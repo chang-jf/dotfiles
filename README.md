@@ -104,3 +104,4 @@ The `YouCompleteMe` bundle requires an additional compile step. Go read teh "Ins
 [Zanshin's dotfile repository](https://github.com/zanshin/dotfiles)  
 [Webpro's dotfile repository](https://github.com/webpro/dotfiles)  
 [C9s's make file for installation](http://c9s.blogspot.tw/2009/11/git-dotfiles.html)  
+[Jimeh's dotfile repository](https://github.com/jimeh/dotfiles)
