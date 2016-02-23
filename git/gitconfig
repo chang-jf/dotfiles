@@ -3,3 +3,5 @@
 # Please adapt and uncomment the following lines:
 	name = Chang, Jung-Feng
 	email = mr.chang.jf@gmail.com
+[push]
+	default = mathing
