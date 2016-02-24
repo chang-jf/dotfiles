@@ -22,6 +22,7 @@ apps=(
     homebrew/binary/rar
     unrar
     reattach-to-user-namespace                               #let tmux support mac's clipboard
+    opencc
 )
 
 brew install "${apps[@]}"
