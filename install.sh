@@ -55,18 +55,20 @@ ln -sf $DOTFILES_DIR/curl/curlrc ~/.curlrc
 # Install command line tools
 # -------------------------------------------------------------------
 # With homebrew(MAC)
-if [ "$(uname)" == "Darwin" ]; then
-    . "$DOTFILES_DIR/install/brew.sh"
-    . "$DOTFILES_DIR/install/brew-cask.sh"
-    . "$DOTFILES_DIR/install/bash.sh"
-    . "$DOTFILES_DIR/install/osx.sh"
-else
-    . "$DOTFILES_DIR/install/osx.sh"
-# Using apt
-# Using yum
-# Using pacman
-# Using emerge
-fi
+case `uname` in
+    Darwin)
+        echo "Darwin"
+        brew -v &> /dev/null && . "$DOTFILES_DIR/install/after_osx.sh"
+        ;;
+    Linux)
+        echo "Linux"
+        apt-get -v &> /dev/null && . "$DOTFILES_DIR/install/after_buntu.sh"
+        which yum &> /dev/null && . "$DOTFILES_DIR/install/after_centos.sh"
+        ;;
+    *)
+        echo "Unknown distro, skip utils installation..."
+        ;;
+esac
 
 # -------------------------------------------------------------------
 # Everything done, let's get out of there.
