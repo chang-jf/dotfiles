@@ -58,7 +58,7 @@ ln -sf $DOTFILES_DIR/curl/curlrc ~/.curlrc
 case `uname` in
     Darwin)
         echo "Darwin"
-        brew -v &> /dev/null && . "$DOTFILES_DIR/install/after_osx.sh"
+        . "$DOTFILES_DIR/install/after_osx.sh"
         ;;
     Linux)
         echo "Linux"
