@@ -54,10 +54,10 @@ ln -sf $DOTFILES_DIR/curl/curlrc ~/.curlrc
 # -------------------------------------------------------------------
 # Install command line tools
 # -------------------------------------------------------------------
-# With homebrew(MAC)
 case `uname` in
     Darwin)
         echo "Darwin"
+        ln -sf $DOTFILES_DIR/tmux/tmux.conf.osx ~/.tmux.conf
         . "$DOTFILES_DIR/install/after_osx.sh"
         ;;
     Linux)
