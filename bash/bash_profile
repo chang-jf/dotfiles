@@ -130,6 +130,14 @@ export LESS_TERMCAP_ue=$'\E[0m'          # end underline
 export LESS_TERMCAP_us=$'\E[01;32m'      # begin underline
 
 # -------------------------------------------------------------------
+# enable bash_completion
+# -------------------------------------------------------------------
+# for osx with brew
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi
+
+# -------------------------------------------------------------------
 # get the aliases and functions
 # -------------------------------------------------------------------
 if [ -f ~/.bashrc ]; then
