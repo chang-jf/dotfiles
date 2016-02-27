@@ -23,6 +23,7 @@ apps=(
     unrar
     reattach-to-user-namespace                               #let tmux support mac's clipboard
     opencc
+    rsync
 )
 
 brew install "${apps[@]}"

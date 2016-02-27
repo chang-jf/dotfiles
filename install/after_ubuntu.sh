@@ -30,7 +30,7 @@ gsettings set com.canonical.Unity.Lenses disabled-scopes "['more_suggestions-ama
 `sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop`
 
 pause '####**Install utilities**'
-sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx p7zip p7zip-plugins cmake python-dev
+sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx p7zip p7zip-plugins cmake python-dev rsync
 sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar
 
 pause '####**Checkout vimrc**'

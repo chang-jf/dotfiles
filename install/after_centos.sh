@@ -23,7 +23,7 @@ pause '####**Install utilities**'
 #yum-axelget accelerates download rate with multi-threads by axel, install it before other utils
 #rar and unrar in repo_forge repository, need enable repo_forge repository before you an install them.
 sudo yum -y install yum-axelget
-sudo yum -y install bash-completion curl git lftp tmux wget vim lynx p7zip p7zip-plugins 
+sudo yum -y install bash-completion curl git lftp tmux wget vim lynx p7zip p7zip-plugins rsync
 
 pause '####**Checkout vimrc files**'
 #deploy vim rc-file and plugins(these development tools is for YouCompleteMe installation, if you don't use ycm, you can skip next line)
