@@ -67,7 +67,7 @@ sudo apt-get -y install powertop
     #mplayer : .divx, .avc
 #play audio : audacious/qmmp
 #video transcoder : handbrake
-#video editor : openshot
+#video editor : openshot, pitivi
 #mp3 tag editor : easytag
 #subtitle editor : aegisub/SrtEdit(win32)
 
