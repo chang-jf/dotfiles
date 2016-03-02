@@ -15,22 +15,25 @@ sudo apt-get remove -y thunderbird totem rhythmbox empathy brasero simple-scan g
 
 pause '####**disable Online Search and Shopping Suggestions from Ubuntu 15.04 Dash**'
 pause '*disable online search*'
-gsettings set com.canonical.Unity.Lenses remote-content-search 'none'
-sudo cat > /etc/xdg/autostart/disable_onlinesearch.desktop <<END
+sudo gsettings set com.canonical.Unity.Lenses remote-content-search 'none'
+sudo cat > ~/disable_onlinesearch.desktop <<END
 [Desktop Entry]
 Name=Disable Search
 Exec=/bin/bash -c "gsettings set com.canonical.Unity.Lenses remote-content-search 'none'"
 Type=Application
 END
+sudo chown root:root ~/disable_onlinesearch.desktop
+sudo chmod 644 ~/disable_onlinesearch.desktop
+sudo mv ~/disable_onlinesearch.desktop /etc/xdg/autostart/
 
 pause '*disable shopping suggestions*'
-gsettings set com.canonical.Unity.Lenses disabled-scopes "['more_suggestions-amazon.scope', 'more_suggestions-u1ms.scope', 'more_suggestions-populartracks.scope', 'music-musicstore.scope', 'more_suggestions-ebay.scope', 'more_suggestions-ubuntushop.scope', 'more_suggestions-skimlinks.scope']"
+sudo gsettings set com.canonical.Unity.Lenses disabled-scopes "['more_suggestions-amazon.scope', 'more_suggestions-u1ms.scope', 'more_suggestions-populartracks.scope', 'music-musicstore.scope', 'more_suggestions-ebay.scope', 'more_suggestions-ubuntushop.scope', 'more_suggestions-skimlinks.scope']"
 
-####**Remove Amazon launcher**
-`sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop`
+pause '*Remove Amazon launcher*'
+sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop
 
 pause '####**Install utilities**'
-sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx p7zip p7zip-plugins cmake python-dev rsync
+sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx cmake python-dev rsync build-essential
 sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar
 
 pause '####**Checkout vimrc**'
@@ -51,8 +54,10 @@ pause '*The meaning of **Optional** is they are optional, only uncomment necessa
 # use powertop to verify power management tweak result
 pause '####**(Optional)Install laptop tools**'
 #sudo apt-get -y install laptop-mode-tools
-sudo add-apt-repository ppa:linrunner/tlp
-sudo apt-get update
+
+#Starting with Ubuntu wily TLP is provided via the offical Ubuntu repos.
+#sudo add-apt-repository ppa:linrunner/tlp
+#sudo apt-get update
 sudo apt-get -y install tlp tlp-rdw
 sudo apt-get -y install powertop
 
@@ -94,7 +99,10 @@ pause '####**(Optional)Install torrent support programs(you knew lftp support to
 sudo apt-get -y install transmission
 
 pause '####**(Optional)Install comic reader)**'
-sudo apt-get -y isntall comicx
+sudo apt-get -y install comicx
+
+pause '####**All done, lets roll**'
+sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean && sudo apt-get -y clean
 
 ####Reference
 #[Ten Things To Do After Installing Ubuntu 15.10]("https://websetnet.com/ten-installing-ubuntu-1510/")
