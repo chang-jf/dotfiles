@@ -126,10 +126,11 @@ export LESS_TERMCAP_us=$'\E[01;32m'      # begin underline
 # enable bash_completion
 # -------------------------------------------------------------------
 # for osx with brew
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
+if [ which brew &> /dev/null ]; then
+    if [ -f $(brew --prefix)/etc/bash_completion ]; then
+        . $(brew --prefix)/etc/bash_completion
+    fi
 fi
-
 # -------------------------------------------------------------------
 # get the aliases and functions
 # -------------------------------------------------------------------
