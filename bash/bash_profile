@@ -112,13 +112,6 @@ export TERM=xterm-256color
 #fi
 
 # -------------------------------------------------------------------
-# Customization prompt
-# -------------------------------------------------------------------
-export PS1="\u@\h \W"
-export PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\[\e[31m\]\H \[\e[33m\]\w\[\e[0m\]\n$\[\033]0;\u@\H:\w\007\] ' # set the prompt, and include the machine name in RED
-. ~/.dotfiles/bash/bash_prompt
-
-# -------------------------------------------------------------------
 # Color man pages:
 # -------------------------------------------------------------------
 export LESS_TERMCAP_mb=$'\E[01;31m'      # begin blinking

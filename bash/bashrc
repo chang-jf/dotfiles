@@ -9,6 +9,10 @@
 # aliases and functions(Define function before calling it)
 source ~/.dotfiles/bash/bash_functions
 source ~/.dotfiles/bash/bash_aliases
+# prompt customization
+export PS1="\u@\h \W"
+export PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\[\e[31m\]\H \[\e[33m\]\w\[\e[0m\]\n$\[\033]0;\u@\H:\w\007\] ' # set the prompt, and include the machine name in RED
+. ~/.dotfiles/bash/bash_prompt
 
 # Bash options
 shopt -s nocaseglob;				# Case-insensitive globbing (used in pathname expansion)
@@ -43,3 +47,4 @@ fi;
 
 # Add `killall` tab completion for common apps
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
+
