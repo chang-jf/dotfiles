@@ -99,7 +99,7 @@ pause '####**(Optional)Install torrent support programs(you knew lftp support to
 sudo apt-get -y install transmission
 
 pause '####**(Optional)Install comic reader)**'
-sudo apt-get -y install comicx
+sudo apt-get -y install mcomix
 
 pause '####**All done, lets roll**'
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean && sudo apt-get -y clean
