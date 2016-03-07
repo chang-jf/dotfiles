@@ -10,7 +10,7 @@ set -g utf8
 set-window-option -g utf8 on
 
 # make tmux display things in 256 colors
-set -g default-terminal "screen-256color"
+set -g default-terminal "xterm-256color"
 
 # set scrollback history to 30000 (30k)
 set -g history-limit 30000
@@ -23,50 +23,112 @@ bind '"' split-window -c "#{pane_current_path}"
 bind % split-window -h -c "#{pane_current_path}"
 bind c new-window -c "#{pane_current_path}"
 
+# mouse control for tmux v2.1
+if-shell "[[ `tmux -V | cut -d' ' -f2` -ge 2.1 ]]" 'set -g mouse off'
+
 # ------------------------------------------------------
-# Key binding(unused key at default: a, e, g, h, j, k, u, v, y
+# Key binding
+# (unused key at default: a, b, e, g, h, j, k, u, v, y)
+# (less used key at default: r(redraw), m(mark pane), t(show time), q(list pane index)
 # ------------------------------------------------------
 # set ` (tic) as the default prefix key combination
 # and unbind C-b to free it up
 unbind C-b
 set -g prefix `
 
-# use send-prefix to pass ` (tic) through to application
-bind ` send-prefix
+# a: pass ` (tic) through to application
+bind a send-prefix
 
-# Join other windows to current pane: <prefix> S, <prefix> V
+# r: reload ~/.tmux.conf
+bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+# ---------------------
+# Deal with pane
+# ---------------------
+# [s|v]: split window horizontally/vertically
+bind s split-window -h
+bind v split-window -v
+
+# [S|V]: split current pane horizontally/vertically and pull other window into new space
 bind-key S choose-window "join-pane -v -s "%%""
 bind-key V choose-window "join-pane -h -s "%%""
 
-# silently break current pane to other window
+# !: silently break current pane to other window
 bind-key ! break-pane -dP
 
-# reload ~/.tmux.conf using PREFIX r(Default: r=Force redraw of the attached client.)
-bind r source-file ~/.tmux.conf \; display "Reloaded!"
+# X: Kill all pane but myself
+bind-key X confirm-before -p "Kill all other panes?(y/n)" "kill-pane -a"
 
-# Make the current window the first window
-bind T swap-window -t 0
+# [h|j|k|l]: map Vi movement keys as pane movement keys(<UP><DOWN><LEFT><RIGHT> keys works too)
+#bind h select-pane -L
+#bind j select-pane -D
+#bind k select-pane -U
+#bind l select-pane -R
 
-# <space> cycle thru. default layouts, z maxium/restore pane size.
+# [w|W]: cycle thru next/previous pane
+unbind w
+bind w select-pane -t :.+
+bind W select-pane -t :.-
 
-# Sync panes
+# [H|J|K|L]: move pane to <Left>/<Down>/<Up>/<Right>
+#unbind L
+#bind H swap-pane -t {left}
+#bind J swap-pane -t {down}
+#bind K swap-pane -t {up}
+#bind L swap-pane -t {right}
+
+# [<|-|+|>]: resize pane to <Left>/<Down>/<Up>/<Right> side
+unbind -
+bind + resize-pane -U
+bind - resize-pane -D
+bind < resize-pane -L
+bind > resize-pane -R
+
+# t: Make the current pane the first pane
+unbind t
+bind t swap-pane -t 0
+
+# =: select layout that make all panes equally high and wide
+unbind =
+bind = select-layout tiled
+
+# |: select layout that make main pane shown on the left and the others spread from top to bottom along the right.
+bind | select-layout main-vertical
+
+# \: select layout that make main pane shown at the top of the window and the remaining panes are spread from left to right in the leftover space at the bottom.
+bind \ select-layout main-horizontal
+
+# C-s: Sync panes
 bind C-s set-window-option synchronize-panes
 
-# explicitly disable mouse control
-# setw -g mode-mouse off
-# set -g mouse-select-pane off
-# set -g mouse-resize-pane off
-# set -g mouse-select-window off
+# <space>: cycle thru. default layouts.
+# z: maxium/restore pane size.
 
-# mouse control for tmux v2.1
-if-shell "[[ `tmux -V | cut -d' ' -f2` -ge 2.1 ]]" 'set -g mouse off'
+# ---------------------
+# Deal with windows
+# ---------------------
+# k: close window
+bind k confirm-before -p "kill-window #W? (y/n)" kill-window
+
+# K: close all window but me
+bind K confirm-before -p "Kill all other window but #W? (y/n)" "kill-window -a"
+
+# `: move to last window
+bind ` last-window
+
+# T: Make the current window the first window
+bind T swap-window -t 0
+
+# [N|P]: Swap with next/previous window
+bind N swap-window -t +
+bind P swap-window -t -
 
 # ---------------------
 # Copy & Paste
 # ---------------------
 # provide access to the clipboard for pbpaste, pbcopy
-#set-option -g default-command "reattach-to-user-namespace -l zsh"
-set-option -g default-command "reattach-to-user-namespace -l bash"
+#set-option -g default-command "reattach-to-user-namespace -l bash"
+set -g default-command "reattach-to-user-namespace -l $SHELL; cd ."
 set-window-option -g automatic-rename on
 
 # use vim keybindings in copy mode
@@ -137,15 +199,4 @@ set -g visual-activity on
 # show session name, window & pane number, date and time on right side of
 # status bar
 set -g status-right-length 80
-#set -g status-right "#[fg=cyan]#{=15:pane_title} : #[fg=blue]#S #I:#P #[fg=yellow]: %d %b %Y #[fg=green]: %l:%M %p : #(date -u | awk '{print $4}') :"
-#set -g status-right "[#[fg=blue]S:#S W:#I P:#P #[fg=cyan]| #[fg=yellow]%d %b %Y #[fg=green]%l:%M %p#[fg=yellow]]"
-set -g status-right '[#(~/.bin/tmux_battery_charge_indicator.sh)][#[fg=blue]S:#S W:#I P:#P #[fg=cyan]| #[fg=yellow]%d %b %Y #[fg=green]%l:%M %p#[fg=yellow]]'
-
-# ----------------------
-# Unbind default keys
-# -----------------------
-unbind M-1
-unbind M-2
-unbind M-3
-unbind M-4
-unbind M-5
+set -g status-right '[#[fg=blue]S:#S W:#I P:#P #[fg=cyan]| #[fg=yellow]%d %b %Y #[fg=green]%l:%M %p#[fg=yellow]]'

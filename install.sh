@@ -62,6 +62,7 @@ case `uname` in
         ;;
     Linux)
         echo "Linux"
+        ln -sf $DOTFILES_DIR/tmux/tmux.conf.linux ~/.tmux.conf
         apt-get -v &> /dev/null && . "$DOTFILES_DIR/install/after_ubuntu.sh"
         which yum &> /dev/null && . "$DOTFILES_DIR/install/after_centos.sh"
         ;;
