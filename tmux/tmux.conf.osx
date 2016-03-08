@@ -4,6 +4,32 @@
 # tmux configuration for set up hot keys, default options and so on.
 # #ref: https://github.com/zanshin/dotfiles
 # -------------------------------------------------------------------
+# set ` (tic) as the default prefix key combination
+# a          : pass ` (tic) through to application
+# r          : reload ~/.tmux.conf
+#
+# [s|v]      : split window horizontally/vertically
+# [S|V]      : split current pane horizontally/vertically and pull other window into new space
+# !          : silently break current pane to other window
+# X          : Kill all pane but myself
+# #[h|j|k|l] : map Vi movement keys as pane movement keys(<UP><DOWN><LEFT><RIGHT> keys works too)
+# [w|W]      : cycle thru next/previous pane
+# #[H|J|K|L] : move pane to <Left>/<Down>/<Up>/<Right>
+# [<|-|+|>]  : resize pane to <Left>/<Down>/<Up>/<Right> side
+# t          : Make the current pane the first pane
+# =          : select layout that make all panes equally high and wide
+# |          : select layout that make main pane shown on the left and the others spread from top to bottom along the right.
+# \          : select layout that make main pane shown at the top of the window and the remaining panes are spread from left to right in the leftover space at the bottom.
+# C-s        : Sync panes
+# <space>    : cycle thru. default layouts.
+# z          : maxium/restore pane size.
+#
+# k          : close window
+# K          : close all window but me
+# `          : move to last window
+# T          : Make the current window the first window
+# [N|P]      : Swap with next/previous window
+# -------------------------------------------------------------------
 
 # use UTF8
 set -g utf8
