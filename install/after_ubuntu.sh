@@ -15,22 +15,22 @@ sudo apt-get remove -y thunderbird totem rhythmbox empathy brasero simple-scan g
 
 pause '####**disable Online Search and Shopping Suggestions from Ubuntu 15.04 Dash**'
 pause '*disable online search*'
-sudo gsettings set com.canonical.Unity.Lenses remote-content-search 'none'
-sudo cat > ~/disable_onlinesearch.desktop <<END
-[Desktop Entry]
-Name=Disable Search
-Exec=/bin/bash -c "gsettings set com.canonical.Unity.Lenses remote-content-search 'none'"
-Type=Application
-END
-sudo chown root:root ~/disable_onlinesearch.desktop
-sudo chmod 644 ~/disable_onlinesearch.desktop
-sudo mv ~/disable_onlinesearch.desktop /etc/xdg/autostart/
+#sudo gsettings set com.canonical.Unity.Lenses remote-content-search 'none'
+#sudo cat > ~/disable_onlinesearch.desktop <<END
+#[Desktop Entry]
+#Name=Disable Search
+#Exec=/bin/bash -c "gsettings set com.canonical.Unity.Lenses remote-content-search 'none'"
+#Type=Application
+#END
+#sudo chown root:root ~/disable_onlinesearch.desktop
+#sudo chmod 644 ~/disable_onlinesearch.desktop
+#sudo mv ~/disable_onlinesearch.desktop /etc/xdg/autostart/
 
-pause '*disable shopping suggestions*'
-sudo gsettings set com.canonical.Unity.Lenses disabled-scopes "['more_suggestions-amazon.scope', 'more_suggestions-u1ms.scope', 'more_suggestions-populartracks.scope', 'music-musicstore.scope', 'more_suggestions-ebay.scope', 'more_suggestions-ubuntushop.scope', 'more_suggestions-skimlinks.scope']"
+#pause '*disable shopping suggestions*'
+#sudo gsettings set com.canonical.Unity.Lenses disabled-scopes "['more_suggestions-amazon.scope', 'more_suggestions-u1ms.scope', 'more_suggestions-populartracks.scope', 'music-musicstore.scope', 'more_suggestions-ebay.scope', 'more_suggestions-ubuntushop.scope', 'more_suggestions-skimlinks.scope']"
 
-pause '*Remove Amazon launcher*'
-sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop
+#pause '*Remove Amazon launcher*'
+#sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop
 
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx cmake python-dev rsync build-essential
@@ -44,9 +44,9 @@ sudo apt-get -y install libappindicator1 libindicator7
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome*.deb
 
-pause '####**Install dropbox**'
-cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
-~/.dropbox-dist/dropboxd& >/dev/null 2>&1 
+#pause '####**Install dropbox**'
+#cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+#~/.dropbox-dist/dropboxd& >/dev/null 2>&1 
 
 pause '*The meaning of **Optional** is they are optional, only uncomment necessary items'
 
@@ -71,15 +71,16 @@ sudo apt-get -y install powertop
 #mp3 tag editor : easytag
 #subtitle editor : aegisub/SrtEdit(win32)
 
-pause '####**(Optional)Add Extended Multimedia Support**'
+#pause '####**(Optional)Add Extended Multimedia Support**'
 sudo apt-get -y install vlc audacious
 
 pause '####**(Optional)Install media codecs and Java sdk in order to decode and support other restricted media formats**'
-sudo apt-get -y install ubuntu-restricted-extras openjdk-8-jdk
+#sudo apt-get -y install ubuntu-restricted-extras openjdk-8-jdk
+sudo apt-get -y install ubuntu-restricted-extras
 
-pause '####**(Optional)Enable DVD playback and other multimedia codecs**'
-sudo apt-get -y install ffmpeg gstreamer0.10-plugins-bad lame libavcodec-extra
-sudo /usr/share/doc/libdvdread4/install-css.sh
+#pause '####**(Optional)Enable DVD playback and other multimedia codecs**'
+#sudo apt-get -y install ffmpeg gstreamer0.10-plugins-bad lame libavcodec-extra
+#sudo /usr/share/doc/libdvdread4/install-css.sh
 #This sould be able to let you play encrypted DVD, but if not work for you, you probably need **libdvdcss2** and **libdvdread4**
 #```
 #sudo apt-get -y install libdvdread4
