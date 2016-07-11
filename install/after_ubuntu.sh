@@ -34,7 +34,7 @@ pause '*disable online search*'
 
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx cmake python-dev rsync build-essential
-sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar
+sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils
 
 pause '####**Checkout vimrc**'
 curl -o - https://raw.githubusercontent.com/chang-jf/vimrc/master/auto-install.sh | sh
