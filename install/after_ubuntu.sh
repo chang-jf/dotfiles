@@ -34,7 +34,18 @@ pause '*disable online search*'
 
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx cmake python-dev rsync build-essential
-sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils
+sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils hime
+
+pause '####**Setup Chinese input menthod **hime****'
+im-config -n hime
+mkdir -p ~/.config/hime
+cp ~/.dotfiles/hime/hime.conf ~/.config/hime/
+chmod 700 ~/.config
+chmod 775 ~/.config/hime
+chmod 664 ~/.config/hime/hime.conf
+
+
+
 
 pause '####**Checkout vimrc**'
 curl -o - https://raw.githubusercontent.com/chang-jf/vimrc/master/auto-install.sh | sh
