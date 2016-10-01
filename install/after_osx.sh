@@ -29,17 +29,18 @@ apps=(
 
 brew install "${apps[@]}"
 
-brew cask install iterm2
-brew cask install google-chrome  
-brew cask install firefox
-brew cask install the-unarchiver   		#decompress tool
-brew cask install dropbox            		#the dropbox
-brew cask install google-drive			#the google drive
+#brew cask install iterm2
+#brew cask install google-chrome  
+#brew cask install firefox
+#brew cask install the-unarchiver   		#decompress tool
+#brew cask install dropbox            		#the dropbox
+#brew cask install google-drive			#the google drive
 brew cask install alfred               		#quick search apps and run
-brew cask install xmind				#mindmapping tool
+#brew cask install xmind				#mindmapping tool
 brew cask install appcleaner			#help complete remove mac app
 brew cask install picasa			#picture manager
-brew cask install techstoreclub-simple-comic	#comic reader
+#brew cask install techstoreclub-simple-comic	#comic reader
+brew cask install edgeview                      #comic reader
 brew cask install vlc                		#video player
 brew cask install filezilla
 
