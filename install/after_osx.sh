@@ -43,6 +43,7 @@ brew cask install picasa			#picture manager
 brew cask install edgeview                      #comic reader
 brew cask install vlc                		#video player
 brew cask install filezilla
+brew cask install osxfuse                       #add xfs, ntfs, ext2|3|4 support
 
 # Deploy vim rc files
 curl -o - https://raw.githubusercontent.com/chang-jf/vimrc/master/auto-install.sh | sh
