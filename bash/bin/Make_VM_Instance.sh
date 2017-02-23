@@ -102,6 +102,21 @@ else
 fi
 [ -z $VGA ] && die "VGA card not selected." || warn "Provision with vga card:$GREEN [$VGA] $NC"
 VGA_CONFIG="-vga '$VGA'"
+SPICE_CONFIG=" -spice port=\$free_spice_port,disable-ticketing \
+    -device virtio-serial -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
+    -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
+    -usb \
+    -device ich9-usb-ehci1,id=usb \
+    -device ich9-usb-uhci1,masterbus=usb.0,firstport=0,multifunction=on \
+    -device ich9-usb-uhci2,masterbus=usb.0,firstport=2 \
+    -device ich9-usb-uhci3,masterbus=usb.0,firstport=4 \
+    -chardev spicevmc,name=usbredir,id=usbredirchardev1 \
+    -device usb-redir,chardev=usbredirchardev1,id=usbredirdev1 \
+    -chardev spicevmc,name=usbredir,id=usbredirchardev2 \
+    -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2 \
+    -chardev spicevmc,name=usbredir,id=usbredirchardev3 \
+    -device usb-redir,chardev=usbredirchardev3,id=usbredirdev3 "
+[ "$VGA" == "qxl" ] && VGA_CONFIG="$VGA_CONFIG $SPICE_CONFIG"
 
 #determine nic
 #=============
@@ -138,19 +153,39 @@ fi
 [ -z $NET ] && die "Network backend not selected." || warn "Provision with network backend:$GREEN [$NET] $NC"
 #NET_CONFIG="-net $NET"
 NET_CONFIG="-netdev '$NET',id='netdev-`echo $MAC_ADDR|sed -e 's/://g'`'"
+if [ "$NET" == "user" ]
+then
+#    if (mount|grep KVM/utilities>/dev/null); then
+#        echo "already mounted"
+#    else
+#        sudo mount --bind /home/angus/iso /home/angus/KVM/utilities
+#        sudo mount -o remount,ro,bind /home/angus/iso /home/angus/KVM/utilities
+#    fi
+    NET_CONFIG="$NET_CONFIG,smb='$QEMU_HOME/utilities'"
+fi
 
 #generate startup script
 #====================
-#cat >$QEMU_HOME"/Template/Rebuild_Template/"$VM_NAME".sh"<<START_SHELL
 cat >$VM_SCRIPT<<START_SHELL
 #!/bin/bash
-echo "to rebuild template, erase image file of tempalte from template directory then run again."
+default_spice_port="5930"
+concurrent_max_spice_port=\$default_spice_port
+concurrent_max_spice_port=\`netstat -tunlp 2>/dev/null|grep 0.0.0.0:59|awk '{print \$4}'|sed 's/0.0.0.0://g'|sort -nr|head -n1\`
+[ \$concurrent_max_spice_port ] && free_spice_port=\`echo \$concurrent_max_spice_port+1|bc\` || free_spice_port=\$default_spice_port
 
 [ -f $VM_DISK ] && echo "VM img Founded, invoking instance..." || qemu-img create -o backing_file=$TEMPLATE,backing_fmt=qcow2 -f qcow2 "$VM_DISK"
 
-$KVM $VM_NAME_CONFIG $MEM_CONFIG $VGA_CONFIG $SOUND_HW_CONFIG $BOOT_ORDER_CONFIG $VM_DISK_CONFIG $ISO_CONFIG $NIC_CONFIG $NET_CONFIG
+$KVM $KVM_CONFIG $VM_NAME_CONFIG $MEM_CONFIG $VGA_CONFIG $SOUND_HW_CONFIG $BOOT_ORDER_CONFIG $VM_DISK_CONFIG $ISO_CONFIG $NIC_CONFIG $NET_CONFIG
 START_SHELL
-#chmod u+x $QEMU_HOME"/Template/Rebuild_Template/"$VM_NAME".sh"
+if [ $NET == "user" ] 
+then
+    sed -i '1a if (mount|grep KVM/utilities>/dev/null); then\
+    echo "mounted"\
+else\
+    sudo mount --bind /home/angus/iso /home/angus/KVM/utilities\
+    sudo mount -o remount,ro,bind /home/angus/iso /home/angus/KVM/utilities\
+fi' $VM_SCRIPT
+fi
 chmod u+x $VM_SCRIPT
 
 exit
