@@ -179,15 +179,22 @@ fi
 #====================
 cat >$VM_SCRIPT<<START_SHELL
 #!/bin/bash
-default_spice_port="5930"
-concurrent_max_spice_port=\$default_spice_port
-concurrent_max_spice_port=\`netstat -tunlp 2>/dev/null|grep 0.0.0.0:59|awk '{print \$4}'|sed 's/0.0.0.0://g'|sort -nr|head -n1\`
-[ \$concurrent_max_spice_port ] && free_spice_port=\`echo \$concurrent_max_spice_port+1|bc\` || free_spice_port=\$default_spice_port
 
 [ -f $VM_DISK ] && echo "VM img Founded, invoking instance..." || qemu-img create -o backing_file=$TEMPLATE,backing_fmt=qcow2 -f qcow2 "$VM_DISK"
 
 $KVM $KVM_CONFIG $VM_NAME_CONFIG $MEM_CONFIG $VGA_CONFIG $SOUND_HW_CONFIG $BOOT_ORDER_CONFIG $VM_DISK_CONFIG $ISO_CONFIG $NIC_CONFIG $NET_CONFIG
 START_SHELL
+
+#if chose qxl VGA card, add some condition at beginning of file to help obtain available spice port
+if [ "$VGA" == "qxl" ] 
+then
+    sed -i '1a default_spice_port="5930"\
+concurrent_max_spice_port=$default_spice_port\
+concurrent_max_spice_port=`netstat -tunlp 2>/dev/null|grep 0.0.0.0:59|awk '"'"'{print $4}'"'"'|sed '"'"'s/0.0.0.0://g'"'"'|sort -nr|head -n1`\
+[ $concurrent_max_spice_port ] && free_spice_port=`echo $concurrent_max_spice_port+1|bc` || free_spice_port=$default_spice_port' $VM_SCRIPT
+fi
+
+#with "user" net backend, add some condition at beginning of file for ensure shared folder was mounted
 if [ $NET == "user" ] 
 then
     sed -i '1a if (mount|grep KVM/utilities>/dev/null); then\
