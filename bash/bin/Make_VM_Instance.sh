@@ -19,11 +19,15 @@ die() {
 }
 
 #Initial environment read from configuration
-#======================================
+#===========================================
 [ -f $0.conf ] && source $0.conf || die "$0.conf not exist, Process aborting..."
 
+#################################################################################################################################################
+# Gathering VM specification from user input
+#################################################################################################################################################
+
 #Select base template
-#==========================================
+#====================
 REPLY=''
 echo -e "\n$YELLOW 選擇虛擬機樣本： $NC\n"
 PS3="Select a template for make up instance: "
@@ -48,10 +52,11 @@ ISO_CONFIG="-drive file='$ISO',if=ide,index=2,media=cdrom"
 ISO_CONFIG=$ISO_CONFIG" -drive file='$VIRTIO_DRIVER',if=ide,index=3,media=cdrom"
 
 #specify boot order
+#==================
 #BOOT_ORDER_CONFIG="-boot order=$BOOT_ORDER,once=d"
 
 #Specify VM name
-#========================
+#===============
 echo -e "\n$YELLOW 指定虛擬機名稱： $NC\n"
 UNIQUE_INSTANCE_NAME=`date +%M%S%N|md5sum|sed 's/^\(..........\).*$/\1/'`
 [ $AUTO_INSTALL == "TRUE" ] && VM_NAME=$UNIQUE_INSTANCE_NAME || read -e -p "Specify VM name: " -i `basename $TEMPLATE`"_Instance" VM_NAME
@@ -61,7 +66,7 @@ VM_NAME_CONFIG="-name '$VM_NAME'"
 
 #what is filename of your vm image?
 #put vm image in Instance directory with vm_name+.img
-#===============================================
+#====================================================
 VM_DISK="$QEMU_INSTANCE_DIR/$VM_NAME.img"
 VM_SCRIPT="$QEMU_HOME/bin/$VM_NAME.sh"
 VM_DISK_CONFIG="-drive file='$VM_DISK',if=ide,index=0,media=disk"
@@ -147,7 +152,8 @@ fi
 MAC_ADDR=$(/home/angus/.bin/qemu-mac-hasher.py $VM_NAME)
 [ -z $MAC_ADDR ] && MAC_ADDR=`/home/angus/.bin/random_mac.sh` || warn "Provision with MAC address:$GREEN [$MAC_ADDR] $NC"
 #NIC_CONFIG="-net nic,model='$NIC',macaddr='$MAC_ADDR'"
-NIC_CONFIG="-device '$NIC',netdev='netdev-`echo $MAC_ADDR|sed -e 's/://g'`',mac='$MAC_ADDR'"
+NETDEV_ID="netdev-`echo $MAC_ADDR|sed -e 's/://g'`"
+NIC_CONFIG="-device '$NIC',netdev='$NETDEV_ID',mac='$MAC_ADDR'"
 
 #determine net backend
 #=====================
@@ -168,42 +174,73 @@ else
 fi
 [ -z $NET ] && die "Network backend not selected." || warn "Provision with network backend:$GREEN [$NET] $NC"
 #NET_CONFIG="-net $NET"
-NET_CONFIG="-netdev '$NET',id='netdev-`echo $MAC_ADDR|sed -e 's/://g'`'"
+#NET_CONFIG="-netdev '$NET',id='netdev-`echo $MAC_ADDR|sed -e 's/://g'`'"
+NET_CONFIG="-netdev '$NET',id='$NETDEV_ID'"
 
 if [ "$NET" == "user" ]
 then
     NET_CONFIG="$NET_CONFIG,smb='$QEMU_HOME/utilities'"
 fi
 
+#-netdev tap,id=id[,fd=h][,ifname=name][,script=file][,downscript=dfile][,helper=helper]
+#Connect the host TAP network interface name to VLAN n.
+if [ "$NET" == "tap" ]
+then
+    NET_CONFIG="$NET_CONFIG,script='$QEMU_SCRIPT_DIR/qemu-ifup',downscript='no'"
+fi
+
+#-netdev bridge,id=id[,br=bridge][,helper=helper]
+#Connect a host TAP network interface to a host bridge device.
+if [ "$NET" == "bridge" ]
+then
+    NET_CONFIG="$NET_CONFIG"
+fi
+
+#################################################################################################################################################
+# Put all together - generate script which used for invoke VM
+#################################################################################################################################################
+
 #generate startup script
-#====================
+#=======================
 cat >$VM_SCRIPT<<START_SHELL
 #!/bin/bash
+[ -f ~/.bin/ANSI_COLOR.conf ] && source ~/.bin/ANSI_COLOR.conf
 
 [ -f $VM_DISK ] && echo "VM img Founded, invoking instance..." || qemu-img create -o backing_file=$TEMPLATE,backing_fmt=qcow2 -f qcow2 "$VM_DISK"
 
 $KVM $KVM_CONFIG $VM_NAME_CONFIG $MEM_CONFIG $VGA_CONFIG $SOUND_HW_CONFIG $BOOT_ORDER_CONFIG $VM_DISK_CONFIG $ISO_CONFIG $NIC_CONFIG $NET_CONFIG
 START_SHELL
+chmod u+x $VM_SCRIPT
 
-#if chose qxl VGA card, add some condition at beginning of file to help obtain available spice port
-if [ "$VGA" == "qxl" ] 
-then
-    sed -i '1a default_spice_port="5930"\
-concurrent_max_spice_port=$default_spice_port\
-concurrent_max_spice_port=`netstat -tunlp 2>/dev/null|grep 0.0.0.0:59|awk '"'"'{print $4}'"'"'|sed '"'"'s/0.0.0.0://g'"'"'|sort -nr|head -n1`\
-[ $concurrent_max_spice_port ] && free_spice_port=`echo $concurrent_max_spice_port+1|bc` || free_spice_port=$default_spice_port' $VM_SCRIPT
-fi
+#################################################################################################################################################
+# post generation, amend generated script add necessary function such as open firewall port for remote spice connect in or mount share folder and so on.
+#################################################################################################################################################
 
-#with "user" net backend, add some condition at beginning of file for ensure shared folder was mounted
+#with "user" net backend, ensure shared folder was mounted at beginning
+#======================================================================
 if [ $NET == "user" ] 
 then
-    sed -i '1a if (mount|grep KVM/utilities>/dev/null); then\
+    sed -i '2a if (mount|grep KVM/utilities>/dev/null); then\
     echo "mounted"\
 else\
     sudo mount --bind /home/angus/iso /home/angus/KVM/utilities\
     sudo mount -o remount,ro,bind /home/angus/iso /home/angus/KVM/utilities\
-fi' $VM_SCRIPT
+fi\
+echo -e $YELLOW"Host share: /home/angus/KVM/utilities <--> smb://10.0.2.4/qemu"$NC
+' $VM_SCRIPT
 fi
-chmod u+x $VM_SCRIPT
+
+#obtain next free TCP port for spice while VGA card is "qxl"
+#===========================================================
+if [ "$VGA" == "qxl" ] 
+then
+    sed -i '2a default_spice_port="5930"\
+concurrent_max_spice_port=$default_spice_port\
+concurrent_max_spice_port=`netstat -tunlp 2>/dev/null|grep 0.0.0.0:59|awk '"'"'{print $4}'"'"'|sed '"'"'s/0.0.0.0://g'"'"'|sort -nr|head -n1`\
+[ $concurrent_max_spice_port ] && free_spice_port=`echo $concurrent_max_spice_port+1|bc` || free_spice_port=$default_spice_port\
+CURRENT_IP=ip addr show `ip route sh|grep ^default|awk '"'"'{print $5}'"'"'|head -n 1`|grep "inet "|awk '"'"'{print $2}'"'"'|sed -e '"'"'s/\/.*//g'"'"'
+echo -e $YELLOW remote-viewer spice://$CURRENT_IP:$free_spice_port $NC' $VM_SCRIPT
+fi
+
 
 exit
