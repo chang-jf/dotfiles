@@ -33,7 +33,7 @@ pause '*disable online search*'
 #sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop
 
 pause '####**Install utilities**'
-sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim lynx cmake python-dev rsync build-essential
+sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim vim-gui-common lynx cmake python-dev rsync build-essential
 sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils hime
 
 pause '####**Setup Chinese input menthod **hime****'
