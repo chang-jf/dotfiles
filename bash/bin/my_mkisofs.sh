@@ -12,4 +12,5 @@ die() {
 [ -z $1 ] && die "Usage: my_mkisofs.sh iso_file_name folder_to_pack_into_iso"
 [ -z $2 ] && die "Usage: my_mkisofs.sh iso_file_name folder_to_pack_into_iso"
 
-mkisofs -l -L -input-charset default -allow-lowercase -allow-multidot -o $1 $2
+#mkisofs -l -L -input-charset default -allow-lowercase -allow-multidot -o $1 $2
+mkisofs -iso-level 3 -J -joliet-long -rock -input-charset utf-8 -o $1 $2

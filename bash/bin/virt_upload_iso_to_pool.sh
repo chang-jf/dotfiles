@@ -15,5 +15,5 @@ iso_file=$1
 pool_name=$2
 vol_name=$3
 iso_size=$(stat -Lc%s $1)
-virsh vol-create-as $pool_name $vol_name $iso_size --format qcow2
-virsh vol-upload --pool $pool_name $vol_name $iso_file 
+sudo virsh vol-create-as $pool_name $vol_name $iso_size --format qcow2
+sudo virsh vol-upload --pool $pool_name $vol_name $iso_file 

@@ -7,25 +7,25 @@ warn() {
 
 die() {
     warn "$1"
-    virsh vol-list --pool vm_templates
+    #sudo virsh vol-list --pool vm_templates
     exit 1
 }
-[ -z $1 ] && die "Usage: overlay_from_template.sh TEMPLATE_VOL NEW_POOL NEW_NAME"
-[ -z $2 ] && die "Usage: overlay_from_template.sh TEMPLATE_VOL NEW_POOL NEW_NAME"
-[ -z $3 ] && die "Usage: overlay_from_template.sh TEMPLATE_VOL NEW_POOL NEW_NAME"
+[ -z $1 ] && warn "Usage: overlay_from_template.sh TEMPLATE_VOL" && sudo virsh vol-list --pool vm_templates && die
+[ -z $2 ] && warn "Usage: overlay_from_template.sh $1 NEW_POOL" && sudo virsh pool-list && die
+[ -z $3 ] && die "Usage: overlay_from_template.sh $1 $2 NEW_NAME"
 TEMPLATE_VOL=$1
 INSTANCE_POOL=$2
 INSTANCE_VOL=$3
 
-virsh vol-create-as $INSTANCE_POOL $INSTANCE_VOL 20G --format qcow2 \
-    --backing-vol `virsh vol-key --pool vm_templates $TEMPLATE_VOL` --backing-vol-format qcow2
-virt-install -n $INSTANCE_VOL -r 2048 --disk vol=$INSTANCE_POOL/$INSTANCE_VOL --noautoconsole --import
+sudo virsh vol-create-as $INSTANCE_POOL $INSTANCE_VOL 50G --format qcow2 \
+    --backing-vol `sudo virsh vol-key --pool vm_templates $TEMPLATE_VOL` --backing-vol-format qcow2
+sudo virt-install -n $INSTANCE_VOL -r 2048 --disk vol=$INSTANCE_POOL/$INSTANCE_VOL --noautoconsole --import
 
-echo "remote-viewer "`virsh domdisplay $INSTANCE_VOL`
+echo "sudo remote-viewer "`sudo virsh domdisplay $INSTANCE_VOL`
 
 echo "#!/bin/bash">/tmp/undo.sh
-echo "virsh detroy $INSTANCE_VOL">>/tmp/undo.sh
-echo "virsh undefine $INSTANCE_VOL --storage hda">>/tmp/undo.sh
+echo "sudo virsh detroy $INSTANCE_VOL">>/tmp/undo.sh
+echo "sudo virsh undefine $INSTANCE_VOL --storage hda">>/tmp/undo.sh
 
 chmod 755 /tmp/undo.sh
 # #########################################################################################
