@@ -8,9 +8,9 @@ die() {
     warn "$1"
     exit 1
 }
-[ -z $1 ] && die "Usage: upload_iso_to_pool.sh ISO POOL VOL"
-[ -z $2 ] && die "Usage: upload_iso_to_pool.sh ISO POOL VOL"
-[ -z $3 ] && die "Usage: upload_iso_to_pool.sh ISO POOL VOL"
+[ -z $1 ] && die "Usage: upload_iso_to_pool.sh ISO"
+[ -z $2 ] && warn "Usage: upload_iso_to_pool.sh $1 POOL" && sudo virsh pool-list --all && die
+[ -z $3 ] && warn "Usage: upload_iso_to_pool.sh $1 $2 VOL" && sudo virsh vol-list --pool $2 && die
 iso_file=$1
 pool_name=$2
 vol_name=$3
