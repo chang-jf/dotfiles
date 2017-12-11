@@ -31,6 +31,9 @@ pause '*disable online search*'
 
 #pause '*Remove Amazon launcher*'
 #sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop
+#pause '*Adjust file encoding order for gedit*'
+gsettings set org.gnome.gedit.preferences.encodings candidate-encodings "['UTF-8', 'BIG5', 'BIG5-HKSCS', 'EUC-TW', 'GB18030', 'GB2312', 'GBK', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+
 
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim vim-gui-common lynx cmake python-dev rsync build-essential
