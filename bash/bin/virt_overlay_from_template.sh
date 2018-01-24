@@ -19,7 +19,7 @@ INSTANCE_VOL=$3
 
 sudo virsh vol-create-as $INSTANCE_POOL $INSTANCE_VOL 50G --format qcow2 \
     --backing-vol `sudo virsh vol-key --pool vm_templates $TEMPLATE_VOL` --backing-vol-format qcow2
-sudo virt-install -n $INSTANCE_VOL -r 2048 --disk vol=$INSTANCE_POOL/$INSTANCE_VOL --noautoconsole --import
+sudo virt-install -n $INSTANCE_VOL -r 2048 --disk vol=$INSTANCE_POOL/$INSTANCE_VOL,bus=virtio --noautoconsole --import
 
 echo "sudo remote-viewer "`sudo virsh domdisplay $INSTANCE_VOL`
 
