@@ -2,9 +2,9 @@
 
 # Install Homebrew and brew cask
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew tap caskroom/cask
-brew update && brew upgrade
-brew cleanup; brew cask cleanup
+#brew tap caskroom/cask
+#brew update && brew upgrade
+#brew cleanup; brew cask cleanup
 
 # Install packages
 
@@ -39,7 +39,7 @@ brew cask install alfred               		#quick search apps and run
 #brew cask install xmind				#mindmapping tool
 #brew cask install appcleaner			#help complete remove mac app
 #brew cask install picasa			#picture manager
-#brew cask install techstoreclub-simple-comic	#comic reader
+brew cask install techstoreclub-simple-comic	#comic reader
 #brew cask install edgeview                      #comic reader
 brew cask install vlc                		#video player
 brew cask install filezilla
