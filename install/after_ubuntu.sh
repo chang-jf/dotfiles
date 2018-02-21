@@ -11,7 +11,7 @@ pause '####**Update repository**'
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y autoremove && sudo apt-get -y autoclean && sudo apt-get -y clean
   
 pause '####**Remove useless built-in application**'
-sudo apt-get remove -y thunderbird totem rhythmbox empathy brasero simple-scan gnome-mahjongg aisleriot gnome-mines cheese transmission-common gnome-orca webbrowser-app gnome-sudoku landscape-client-ui-install
+#sudo apt-get remove -y thunderbird totem rhythmbox empathy brasero simple-scan gnome-mahjongg aisleriot gnome-mines cheese transmission-common gnome-orca webbrowser-app gnome-sudoku landscape-client-ui-install
 
 pause '####**disable Online Search and Shopping Suggestions from Ubuntu 15.04 Dash**'
 pause '*disable online search*'
@@ -32,20 +32,21 @@ pause '*disable online search*'
 #pause '*Remove Amazon launcher*'
 #sudo rm -f /usr/share/applications/ubuntu-amazon-default.desktop
 #pause '*Adjust file encoding order for gedit*'
-gsettings set org.gnome.gedit.preferences.encodings candidate-encodings "['UTF-8', 'BIG5', 'BIG5-HKSCS', 'EUC-TW', 'GB18030', 'GB2312', 'GBK', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
+#gsettings set org.gnome.gedit.preferences.encodings candidate-encodings "['UTF-8', 'BIG5', 'BIG5-HKSCS', 'EUC-TW', 'GB18030', 'GB2312', 'GBK', 'CURRENT', 'ISO-8859-15', 'UTF-16']"
 
 
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim vim-gui-common lynx cmake python-dev rsync build-essential
-sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils hime
+#sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils hime
+sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils
 
-pause '####**Setup Chinese input menthod **hime****'
-im-config -n hime
-mkdir -p ~/.config/hime
-cp ~/.dotfiles/hime/hime.conf ~/.config/hime/
-chmod 700 ~/.config
-chmod 775 ~/.config/hime
-chmod 664 ~/.config/hime/hime.conf
+#pause '####**Setup Chinese input menthod **hime****'
+#im-config -n hime
+#mkdir -p ~/.config/hime
+#cp ~/.dotfiles/hime/hime.conf ~/.config/hime/
+#chmod 700 ~/.config
+#chmod 775 ~/.config/hime
+#chmod 664 ~/.config/hime/hime.conf
 
 
 
@@ -72,8 +73,8 @@ pause '####**(Optional)Install laptop tools**'
 #Starting with Ubuntu wily TLP is provided via the offical Ubuntu repos.
 #sudo add-apt-repository ppa:linrunner/tlp
 #sudo apt-get update
-sudo apt-get -y install tlp tlp-rdw
-sudo apt-get -y install powertop
+#sudo apt-get -y install tlp tlp-rdw
+#sudo apt-get -y install powertop
 
 #openshot manual: http://www.openshotusers.com/help/1.3/zh_TW/
 #play video : vlc/mplayer
@@ -86,7 +87,8 @@ sudo apt-get -y install powertop
 #subtitle editor : aegisub/SrtEdit(win32)
 
 #pause '####**(Optional)Add Extended Multimedia Support**'
-sudo apt-get -y install vlc audacious
+#sudo apt-get -y install vlc audacious
+sudo apt-get -y install vlc
 
 pause '####**(Optional)Install media codecs and Java sdk in order to decode and support other restricted media formats**'
 #sudo apt-get -y install ubuntu-restricted-extras openjdk-8-jdk
