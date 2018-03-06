@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# in order to be able to find brctl
+PATH=$PATH:/sbin:/usr/sbin
+ip=$(which ip)
+brctl=$(which brctl)
+if [ ! "$ip" -o ! "$brctl" ]; then
+    echo "W: $0: not doing any bridge processing: neither ip nor brctl utility not found" >&2
+    exit 0
+fi
+    
+
+gw=$(ip route ls | awk '{for(i=0;i<NF;i++) { if ($i == "dev") { print $(i+1); next; } } }' | sort | uniq -d)
+for br in $gw; do
+    if [ -d /sys/class/net/$br/bridge/. ]; then
+        echo $br
+    fi
+done

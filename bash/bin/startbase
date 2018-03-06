@@ -1,0 +1,15 @@
+#!/bin/bash
+VM_HOST="127.0.0.1"
+warn() {
+    echo "$1" >&2
+    echo ""
+}
+
+die() {
+    warn "$1"
+    exit 1
+}
+[ -z $1 ] && warn "Usage: startbase BASEVM" && sudo virsh --connect qemu+tcp://127.0.0.1/system list --all|head -n 2 && sudo virsh --connect qemu+tcp://127.0.0.1/system list --all|grep base && die
+
+sudo virsh start $1
+remote-viewer `sudo virsh domdisplay $1`
