@@ -38,7 +38,8 @@ pause '*disable online search*'
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim vim-gui-common lynx cmake python-dev rsync build-essential
 #sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils hime
-sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils
+sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils net-tools
+
 
 #pause '####**Setup Chinese input menthod **hime****'
 #im-config -n hime
