@@ -1,10 +1,27 @@
 #!/bin/bash
-VM_HOST="127.0.0.1"
-ISO_SOURCE=$1
-VM_LOCATION=$2
-VM_GUEST=$3
-#ISO_SOURCE="/home/KVM/iso/SW_DVD5_SA_Win_Ent_7w_SP1_64BIT_ChnTrad_-2_MLF_X17-59110"
-RANDOM_MAC=`/home/angus/.bin/random_mac2.sh`
+###########################################################################################################################################################
+# Name
+#       newbase - Script for create new base image
+# SYNOPSIS
+#       newbase [OPTION]
+# DESCRIPTION
+#       newbase script take the following OPTIONS.
+#       -n NAME
+#          Name of the new guest virtual maching instance. Given string will lead by "base_", 
+#          If this option is omitted a 6 letters random string will be generated for this instance.
+#       -v OPTIONS
+#          Specify what video device model will be attached to the guest. Valid values for this option are cirrus,qxl,vga,vmvga.
+#          If this option is omitted the default is "qxl", and recommand assign it to "cirrus" while you are installing Windows 7 guest.
+#       -c OPTIONS
+#          File or device used as a virtual CD-ROM device.  It can be path to an ISO image, or to a CDROM device.
+#          If both -c and -l option omitted, default is print out all available iso path in stock and known installation urls.
+#       -l LOCATION
+#          Distribution tree installation source. 
+#          newbase is rely on virt-install which can recognize certain distribution trees and fetches a bootable kernel/initrd pair to launch the
+#          install, mostly is for Linux installation.
+#          If both -c and -l option omitted, default is print out all available iso path in stock and known installation urls.
+#       -h
+#          List help message
 warn() {
     echo "$1" >&2
     echo ""
@@ -15,23 +32,78 @@ die() {
     #sudo virsh --connect qemu+tcp://$VM_HOST/system vol-list --pool iso
     exit 1
 }
-[ -z $1 ] && warn "Usage: virt_new_window_vm PATH_TO_ISO_FILE" && sudo virsh --connect qemu+tcp://$VM_HOST/system vol-list --pool iso && die
-[ -z $2 ] && warn "Usage: virt_new_window_vm $ISO_SOURCE POOLS_TO_INSTALL" && sudo virsh --connect qemu+tcp://$VM_HOST/system pool-list --all && die
-[ -z $3 ] && warn "Usage: virt_new_window_vm $ISO_SOURCE $VM_LOCATION NAME_OF_VM" && sudo virsh --connect qemu+tcp://$VM_HOST/system list --all && die
+print_known_iso() {
+    echo "Known iso volume(-c VOLUME):"
+    echo "================="
+    sudo virsh vol-list --pool default|grep iso|awk '{print $1}'
+    echo ""
+}
+print_known_installable_url(){
+    echo "Known intallable url(-l URL):"
+    echo "====================="
+    echo "CentOS 7    : http://ftp.twaren.net/Linux/CentOS/7/os/x86_64/"
+    echo "Ubuntu 1604 : http://tw.archive.ubuntu.com/ubuntu/dists/xenial/main/installer-amd64/"
+    echo "Ubuntu 1710 : http://tw.archive.ubuntu.com/ubuntu/dists/artful/main/installer-amd64/"
+    echo "Kali Rolling: https://ftp.yzu.edu.tw/Linux/kali/dists/kali-rolling/main/installer-amd64/"
+    echo ""
+}
+print_supported_vga_model(){
+    echo "Supported VGA model(-v MODEL):"
+    echo "===================="
+    echo "cirrus - Used when intall Windows 7"
+    echo "qxl - (Default) Used for all other OS installation"
+    echo ""
+}
+print_available_source() {
+    echo "You have to specify one installation source:"
+    print_known_iso
+    print_known_installable_url
+}
+print_help() {
+    #List known iso volume, known url of installation source, supported vga model
+    print_known_iso
+    print_known_installable_url
+    print_supported_vga_model
+}
 
+#Variable def
+RANDOM_MAC=`hexdump -vn3 -e '/3 "52:54:00"' -e '/1 ":%02x"' -e '"\n"' /dev/urandom`
+CDROM=""
+LOCATION=""
+NAME="base_"`echo $RANDOM_MAC|awk -F':' '{print $4$5$6}'`
+VIDEO="qxl"
+MEDIA=""
+GRAPHIC="--graphic spice,listen=0.0.0.0 --channel spicevmc,target_type=virtio,name='com.redhat.spice.0'"
+while getopts c:h:l:n:v: option
+do
+    case "${option}"
+        in
+        c) CDROM=`sudo virsh vol-path ${OPTARG} --pool default`;;
+        h) print_help;;
+        l) LOCATION=${OPTARG};;
+        n) NAME="base_"${OPTARG};;
+        v) VIDEO=$OPTARG;;
+    esac
+done
+ 
+[[ -z $CDROM && -z $LOCATION ]] && print_available_source && exit
+[[ -z $CDROM && ! -z $LOCATION ]] && GRAPHIC="--graphics none" &&MEDIA=" --console pty,target_type=serial --location '$LOCATION' --extra-args 'console=ttyS0,115200n8 serial'"
+[[ ! -z $CDROM && -z $LOCATION ]] && MEDIA="--cdrom $CDROM"
+[[ ! -z $CDROM && ! -z $LOCATION ]] && warn "Either spicify CDROM or a intallable url" && exit
 
-sudo virt-install --connect qemu+tcp://$VM_HOST/system --name $VM_GUEST --memory 2048 \
+sudo virt-install --name $NAME --memory 4096 \
     --clock offset=localtime \
-    --disk pool=$VM_LOCATION,size=50,bus=virtio \
+    --disk pool=default,size=50,bus=virtio \
     --network default,model=virtio,mac="$RANDOM_MAC" \
-    --video qxl --graphic spice,listen=0.0.0.0 --channel spicevmc,target_type=virtio,name='com.redhat.spice.0' \
-    --cdrom $ISO_SOURCE
+    --video $VIDEO \
+    $GRAPHIC \
+    $MEDIA
 
-echo "virsh change-media $VM_GUEST hda --eject"
-echo "virsh change-media $VM_GUEST hda ISO_LOCATION --insert"
-#    `virt-install --connect qemu+tcp://10.162.9.13/system --name test --memory 2048 \
-#        --disk size=9,bus=virtio \
-#        --network default,model=virtio,mac=52:54:00:11:22:33 \
-#        --video qxl --graphic spice,listen=0.0.0.0 --channel spicevmc,target_type=virtio,name='com.redhat.spice.0' \
-#        --cdrom /home/KVM/iso/SW_DVD5_SA_Win_Ent_7w_SP1_64BIT_ChnTrad_-2_MLF_X17-59110`
-#
+#virt-install --name base_w8 --memory 4096 --clock offset=localtime --disk pool=default,size=50,bus=virtio -c /var/lib/libvirt/images/iso_w8
+##安裝Windows 8時network,vga,graphic使用預設值如下範例，不然IO會非常慢，
+##實際上除了網卡外預設仍然會使用qxl VGA與spice graphic，
+##因此安裝完之後把網卡換成virtio即可
+
+##貼上與取下網路卡
+#virsh detach-interface base_w8 network --current
+#virsh attach-interface base_w8 network default --model virtio --mac `/home/angus/.bin/random_mac2.sh` --current
