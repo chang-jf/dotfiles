@@ -38,7 +38,7 @@ pause '*disable online search*'
 pause '####**Install utilities**'
 sudo apt-get -y --ignore-missing install bash-completion curl git lftp tmux wget vim vim-gui-common lynx cmake python-dev rsync build-essential
 #sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils hime
-sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils net-tools
+sudo apt-get -y --ignore-missing install rar unrar p7zip p7zip-full p7zip-rar exfat-fuse exfat-utils net-tools ibus-chewing
 
 
 #pause '####**Setup Chinese input menthod **hime****'
@@ -56,7 +56,7 @@ pause '####**Checkout vimrc**'
 curl -o - https://raw.githubusercontent.com/chang-jf/vimrc/master/auto-install.sh | sh
 
 pause '####**Install chrome browser**'
-#sudo apt-get -y install libappindicator1 libindicator7
+#sudo apt-get -y install libxss1 libappindicator1 libindicator7
 #wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 #sudo dpkg -i google-chrome*.deb
 
