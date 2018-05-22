@@ -1,0 +1,52 @@
+#!/bin/bash
+###########################################################################################################################################################
+# Name
+#       delvm - Script for cleanup temporary vm
+# SYNOPSIS
+#       delvm [OPTION] [vm_name]
+# DESCRIPTION
+#       delvm script take the following OPTIONS.
+#       -a Y
+#          Remove all temporary vm without question, use with careful.
+
+warn() {
+    echo "$1" >&2
+    echo ""
+}
+
+die() {
+    exit 1
+}
+get_all_tmp_vm_name() {
+    sudo virsh list --all|grep tmp_|awk '{print $2}'
+}
+get_all_tmp_vm_volume() {
+    [ ! $# -eq 1 ] && exit
+    sudo virsh domblklist $1|grep tmp_|awk '{print $1}'
+}
+undefine_tmp_vm() {
+    [ ! $# -eq 1 ] && warn "Specify only one vm to remove at a time! " && die
+    for i in $(get_all_tmp_vm_volume $1); do
+        [ -z $VOLUME_LIST ] && VOLUME_LIST=$i || VOLUME_LIST=$VOLUME_LIST",$i"
+    done
+    sudo virsh destroy $1
+    sleep 1
+    sudo virsh undefine $1 --storage $VOLUME_LIST
+}
+undefine_all_tmp_vm() {
+    for i in $(get_all_tmp_vm_name); do
+        undefine_tmp_vm $i
+        sleep 1
+    done
+}
+
+[ $# -eq 0 ] && echo "Temporary vms:" && echo "==============" && sudo virsh list --all|grep "tmp_"|awk '{print $2}'
+[ $# -eq 1 ] && undefine_tmp_vm $1
+
+while getopts a: option
+do
+    case "${option}"
+        in
+        a) undefine_all_tmp_vm;;
+    esac
+done
