@@ -1,4 +1,6 @@
 #!/bin/bash
+#The "base" image should be as clean as possible, So there is no network pick up options in base image creation script.
+#The only reason enable network for base image is to do necessary update and should only be in a NAT network.
 VM_HOST="127.0.0.1"
 warn() {
     echo "$1" >&2
