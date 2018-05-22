@@ -10,7 +10,8 @@ if [ ! "$ip" -o ! "$brctl" ]; then
 fi
     
 
-gw=$(ip route ls | awk '{for(i=0;i<NF;i++) { if ($i == "dev") { print $(i+1); next; } } }' | sort | uniq -d)
+#gw=$(ip route ls | awk '{for(i=0;i<NF;i++) { if ($i == "dev") { print $(i+1); next; } } }' | sort | uniq -d)
+gw=$(ip link ls | awk -F ': ' '{ if (NR%2) print $2}' | sort | uniq -u)
 for br in $gw; do
     if [ -d /sys/class/net/$br/bridge/. ]; then
         echo $br
