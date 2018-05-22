@@ -1,24 +1,88 @@
 #!/bin/bash
-VM_HOST="127.0.0.1"
-RANDOM_MAC=`/home/angus/.bin/random_mac2.sh`
-RANDOM_HOSTNAME=`echo $RANDOM_MAC |awk -F ':' '{print "tmp"$4$5$6}'`
-DEFAULT_TEMPLATE="base_w8"
-DEFAULT_NETWORK="nat"
-INSTANCE_VOL=$RANDOM_HOSTNAME
-
+###########################################################################################################################################################
+# Name
+#       newvm - Script for create vm from template
+# SYNOPSIS
+#       newvm [OPTION]
+# DESCRIPTION
+#       newvm script take the following OPTIONS.
+#       -n NAME
+#          Name of the new guest virtual maching instance. Given string will lead by "tmp_", 
+#          If this option is omitted a 6 letters random string will be generated for this instance.
+#       -w NETWORK
+#          Specify which network should vm connect to
+#       -b BRIDGE
+#          Specify which bridge should vm connect to
+#       -t TEMPLATE
+#          Specify which template to base on
+#       -h
+#          List help message
 warn() {
     echo "$1" >&2
     echo ""
 }
 
 die() {
-    warn "$1"
     exit 1
 }
-[ -v $1 ] && TEMPLATE_VOL=$1
-[ -z $1 ] && TEMPLATE_VOL=$DEFAULT_TEMPLATE;echo "Instnace domain name is:"$INSTANCE_VOL
+print_known_network() {
+    echo "Known Network(-w NETWORK):"
+    echo "========================="
+    sudo virsh net-list --all|awk '{ if (NR>2) { print $1 }}'
+}
+print_known_bridge() {
+    echo "Known Bridges(-b BRIDGE):"
+    echo "========================="
+    sudo /home/angus/.bin/getbridge
+    echo ""
+}
+print_all_templates() {
+    echo "Available templates(-t TEMPLATES):"
+    echo "=============================="
+    sudo virsh list --all |grep base|awk '{print $2}'      
+    sudo virsh list --all |grep perm|awk '{print $2}'      
+}
+print_help() {
+    #List known netowrks, beidges, as well as template to base supported vga model
+    print_known_network
+    print_known_bridge
+    print_all_templates
+    die
+}
 
-sudo virsh vol-create-as default $INSTANCE_VOL 50G --format qcow2 \
-    --backing-vol `sudo virsh vol-key --pool default $TEMPLATE_VOL` --backing-vol-format qcow2
-sudo virt-install -n $INSTANCE_VOL -r 4096 --disk vol=default/$INSTANCE_VOL,bus=virtio --noautoconsole --import
-remote-viewer `sudo virsh domdisplay $INSTANCE_VOL`
+#Variable def
+RANDOM_MAC=`hexdump -vn3 -e '/3 "52:54:00"' -e '/1 ":%02x"' -e '"\n"' /dev/urandom`
+NAME="tmp_"`echo $RANDOM_MAC|awk -F':' '{print $4$5$6}'`
+NETWORK=""
+BRIDGE=""
+TEMPLATE="base_w7"
+while getopts n:w:b:t:h: option
+do
+    case "${option}"
+        in
+        n) NAME="tmp_"${OPTARG};;
+        w) NETWORK=${OPTARG};;
+        b) BRIDGE=${OPTARG};;
+        t) TEMPLATE=$OPTARG;;
+        h) print_help;;
+    esac
+done
+[[ -n $NETWORK && -n $BRIDGE ]] && warn "-w and -b switch are mutual exclusion, chose one from the two!" && die
+[[ -n $NETWORK ]] && NETWORK_OPTS="--network $NETWORK,model=virtio,mac=$RANDOM_MAC "
+[[ -n $BRIDGE ]] && NETWORK_OPTS="--bridge $BRIDGE,model=virtio,virtualport_type=openvswitch,mac=$RANDOM_MAC "
+ 
+sudo virsh vol-create-as default $NAME 50G --format qcow2 \
+    --backing-vol $TEMPLATE --backing-vol-format qcow2
+sudo virt-install -n $NAME -r 2048 \
+    --disk vol=default/$NAME,bus=virtio \
+    $NETWORK_OPTS --noautoconsole --import
+remote-viewer `sudo virsh domdisplay $NAME`
+
+#virt-install --name base_w8 --memory 4096 --clock offset=localtime --disk pool=default,size=50,bus=virtio -c /var/lib/libvirt/images/iso_w8
+##安裝Windows 8時network,vga,graphic使用預設值如下範例，不然IO會非常慢，
+##實際上除了網卡外預設仍然會使用qxl VGA與spice graphic，
+##因此安裝完之後把網卡換成virtio即可
+
+##貼上與取下網路卡
+#virsh detach-interface base_w8 network --current
+#virsh attach-interface base_w8 network default --model virtio --mac `/home/angus/.bin/random_mac2.sh` --current
