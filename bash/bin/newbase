@@ -5,6 +5,8 @@
 # SYNOPSIS
 #       newbase [OPTION]
 # DESCRIPTION
+#       The "base" image should be as clean as possible, So there is no network pick up options in base image creation script.
+#       The only reason enable network for base image is to do necessary update and should only be in a NAT network.
 #       newbase script take the following OPTIONS.
 #       -n NAME
 #          Name of the new guest virtual maching instance. Given string will lead by "base_", 
@@ -91,13 +93,21 @@ done
 [[ ! -z $CDROM && -z $LOCATION ]] && MEDIA="--cdrom $CDROM"
 [[ ! -z $CDROM && ! -z $LOCATION ]] && warn "Either spicify CDROM or a intallable url" && exit
 
-sudo virt-install --name $NAME --memory 4096 \
+sudo virsh vol-create-as default $NAME 50G --format qcow2
+sudo virt-install --name $NAME --memory 2048 \
     --clock offset=localtime \
-    --disk pool=default,size=50,bus=virtio \
+    --disk vol=default/$NAME,bus=virtio \
     --network default,model=virtio,mac="$RANDOM_MAC" \
     --video $VIDEO \
     $GRAPHIC \
     $MEDIA
+#sudo virt-install --name $NAME --memory 4096 \
+#    --clock offset=localtime \
+#    --disk pool=default,size=50,bus=virtio \
+#    --network default,model=virtio,mac="$RANDOM_MAC" \
+#    --video $VIDEO \
+#    $GRAPHIC \
+#    $MEDIA
 
 #virt-install --name base_w8 --memory 4096 --clock offset=localtime --disk pool=default,size=50,bus=virtio -c /var/lib/libvirt/images/iso_w8
 ##安裝Windows 8時network,vga,graphic使用預設值如下範例，不然IO會非常慢，
