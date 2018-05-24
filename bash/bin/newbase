@@ -93,14 +93,9 @@ done
 [[ ! -z $CDROM && -z $LOCATION ]] && MEDIA="--cdrom $CDROM"
 [[ ! -z $CDROM && ! -z $LOCATION ]] && warn "Either spicify CDROM or a intallable url" && exit
 
-sudo virsh vol-create-as default $NAME 50G --format qcow2
-sudo virt-install --name $NAME --memory 2048 \
-    --clock offset=localtime \
-    --disk vol=default/$NAME,bus=virtio \
-    --network default,model=virtio,mac="$RANDOM_MAC" \
-    --video $VIDEO \
-    $GRAPHIC \
-    $MEDIA
+echo "sudo virsh vol-create-as default $NAME 165G --format qcow2 --prealloc-metadata"
+echo "sudo virt-install --name $NAME --memory 2048 --clock offset=localtime --disk vol=default/$NAME,bus=virtio --network default,model=virtio,mac="$RANDOM_MAC" --video $VIDEO $GRAPHIC $MEDIA"
+
 #sudo virt-install --name $NAME --memory 4096 \
 #    --clock offset=localtime \
 #    --disk pool=default,size=50,bus=virtio \

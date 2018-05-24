@@ -72,7 +72,7 @@ done
 [[ -n $BRIDGE ]] && NETWORK_OPTS="--bridge $BRIDGE,model=virtio,virtualport_type=openvswitch,mac=$RANDOM_MAC "
  
 sudo virsh vol-create-as default $NAME 50G --format qcow2 \
-    --backing-vol $TEMPLATE --backing-vol-format qcow2
+    --backing-vol $TEMPLATE --backing-vol-format qcow2 --prealloc-metadata
 sudo virt-install -n $NAME -r 2048 \
     --disk vol=default/$NAME,bus=virtio \
     $NETWORK_OPTS --noautoconsole --import
