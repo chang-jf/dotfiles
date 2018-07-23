@@ -1,4 +1,5 @@
 #!/bin/bash
+#C2960G#show tech-support | redirect tftp://10.7.6.143/20180717_C2960_TechSupport.txt
 TARGET_SWITCH="10.7.6.11"
 IOS_LOCATION="flash:c2960-lanbasek9-mz.122-44.SE6/"
 IOS_NAME="c2960-lanbasek9-mz.122-44.SE6.bin"

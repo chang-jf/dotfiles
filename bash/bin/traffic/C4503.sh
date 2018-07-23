@@ -1,4 +1,5 @@
 #!/bin/bash
+#C4503#show tech-support | redirect tftp://10.7.6.143/20180717_C4503_TechSupport.txt
 TARGET_SWITCH="10.7.6.1"
 IOS_LOCATION="bootflash:"
 IOS_NAME="cat4500e-ipbase-mz.122-54.SG1.bin"
