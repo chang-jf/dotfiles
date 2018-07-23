@@ -43,9 +43,10 @@ print_known_iso() {
 print_known_installable_url(){
     echo "Known intallable url(-l URL):"
     echo "====================="
-    echo "CentOS 7    : http://ftp.twaren.net/Linux/CentOS/7/os/x86_64/"
+    echo "CentOS 7    : http://ftp.yzu.edu.tw/Linux/CentOS/7/os/x86_64/"
     echo "Ubuntu 1604 : http://tw.archive.ubuntu.com/ubuntu/dists/xenial/main/installer-amd64/"
     echo "Ubuntu 1710 : http://tw.archive.ubuntu.com/ubuntu/dists/artful/main/installer-amd64/"
+    echo "Ubuntu 1804 : http://tw.archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/"
     echo "Kali Rolling: https://ftp.yzu.edu.tw/Linux/kali/dists/kali-rolling/main/installer-amd64/"
     echo ""
 }
@@ -85,6 +86,7 @@ do
         l) LOCATION=${OPTARG};;
         n) NAME="base_"${OPTARG};;
         v) VIDEO=$OPTARG;;
+        *) echo "hello";;
     esac
 done
  
@@ -93,7 +95,7 @@ done
 [[ ! -z $CDROM && -z $LOCATION ]] && MEDIA="--cdrom $CDROM"
 [[ ! -z $CDROM && ! -z $LOCATION ]] && warn "Either spicify CDROM or a intallable url" && exit
 
-echo "sudo virsh vol-create-as default $NAME 165G --format qcow2 --prealloc-metadata"
+echo "sudo virsh vol-create-as default $NAME 50G --format qcow2 --prealloc-metadata"
 echo "sudo virt-install --name $NAME --memory 2048 --clock offset=localtime --disk vol=default/$NAME,bus=virtio --network default,model=virtio,mac="$RANDOM_MAC" --video $VIDEO $GRAPHIC $MEDIA"
 
 #sudo virt-install --name $NAME --memory 4096 \
