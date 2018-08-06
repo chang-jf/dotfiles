@@ -8,7 +8,7 @@ TFTP_HOST=$(ip addr show dev $TFTP_HOST_MAINNIC | grep "inet" | awk 'NR==1{print
 TFTP_DIR="/tftpboot"
 BACKUP_IOS_NAME=$IOS_NAME
 #BACKUP_DIR="/home/angus/Dropbox/@work/20170705_台北市交大維護/`date +%Y%m%d-%H%M%S`_月保養"
-BACKUP_DIR="/home/angus/Dropbox/@work/20170705_台北市交大維護/`date +%Y%m%d`_月保養"
+BACKUP_DIR="/home/angus/Dropbox/@work/20170705_新北市交通大隊維護案/`date +%Y%m%d`_月保養"
 #BACKUP_DIR="/tmp/`date +%Y%m%d-%H%M%S`_月保養"
 
 echo "**IOS backup utility**"
