@@ -1,2 +1,2 @@
 #!/bin/bash
-killall nm-applet; nohup nm-applet &
+killall nm-applet; nohup nm-applet &>/dev/null &
