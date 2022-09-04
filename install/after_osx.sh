@@ -35,14 +35,18 @@ brew install "${apps[@]}"
 #brew cask install the-unarchiver   		#decompress tool
 #brew cask install dropbox            		#the dropbox
 #brew cask install google-drive			#the google drive
-brew cask install alfred               		#quick search apps and run
+#brew cask install alfred               		#quick search apps and run
+brew install --cask alfred                      #quick search apps and run
 #brew cask install xmind				#mindmapping tool
 #brew cask install appcleaner			#help complete remove mac app
 #brew cask install picasa			#picture manager
-brew cask install techstoreclub-simple-comic	#comic reader
+#brew cask install techstoreclub-simple-comic	#comic reader
+brew install --cask techstoreclub-simple-comic	#comic reader
 #brew cask install edgeview                      #comic reader
-brew cask install vlc                		#video player
-brew cask install filezilla
+#brew cask install vlc                		#video player
+#brew cask install filezilla
+brew install --cask vlc                		#video player
+brew install --cask filezilla
 #brew cask install osxfuse                       #add xfs, ntfs, ext2|3|4 support
 
 # Deploy vim rc files
