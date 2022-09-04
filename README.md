@@ -2,7 +2,8 @@ This repository holds configuration files from my working environment, So I can 
 
 #Installation
 ```
-git clone git://github.com/chang-jf/dotfiles.git ~/.dotfiles
+#git clone git://github.com/chang-jf/dotfiles.git ~/.dotfiles
+git clone https://github.com/chang-jf/dotfiles ~/.dotfiles
 ~/.dotfiles/install.sh
 ```
 
